@@ -29,10 +29,21 @@ terraform {
 }
 
 ############################
+# AWS Provider
+############################
+provider "aws" {
+  region = local.region
+
+  default_tags {
+    tags = local.tags
+  }
+}
+
+############################
 # Terraform Module: VPC
 ############################
 module "vpc" {
-  source = "./terraform"
+  source = "./modules/vpc"
 
   azs = local.azs
 

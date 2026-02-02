@@ -1,20 +1,6 @@
 ############################
-# VPC Variables
-############################
-variable "azs" {
-  description = "Availability zones for VPC"
-  type        = list(string)
-  default     = ["us-east-1a", "us-east-1b"]
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default     = {}
-}
-
-############################
 # VPC
+############################
 resource "aws_vpc" "bedrock" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -156,27 +142,4 @@ resource "aws_route_table_association" "private" {
 
   subnet_id      = aws_subnet.private[each.value].id
   route_table_id = aws_route_table.private[each.value].id
-}
-
-############################
-# Outputs
-############################
-output "vpc_id" {
-  description = "VPC ID"
-  value       = aws_vpc.bedrock.id
-}
-
-output "public_subnet_ids" {
-  description = "Public subnet IDs"
-  value       = [for subnet in aws_subnet.public : subnet.id]
-}
-
-output "private_subnet_ids" {
-  description = "Private subnet IDs"
-  value       = [for subnet in aws_subnet.private : subnet.id]
-}
-
-output "nat_gateway_ips" {
-  description = "NAT Gateway public IPs"
-  value       = [for eip in aws_eip.nat : eip.public_ip]
 }

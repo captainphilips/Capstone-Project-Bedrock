@@ -69,3 +69,16 @@ resource "aws_iam_role_policy_attachment" "eks_nodes" {
   role       = aws_iam_role.eks_nodes.name
   policy_arn = each.value
 }
+
+############################
+# OIDC Provider
+############################
+data "tls_certificate" "bedrock" {
+  url = aws_eks_cluster.bedrock.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "bedrock" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.bedrock.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.bedrock.identity[0].oidc[0].issuer
+}

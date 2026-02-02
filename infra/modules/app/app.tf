@@ -23,5 +23,6 @@ resource "helm_release" "retail_store" {
   wait    = true
   timeout = 600
 
-  depends_on = [aws_eks_node_group.bedrock]
+  # Removed invalid cross-module dependency
+  # depends_on = [aws_eks_node_group.bedrock]
 }

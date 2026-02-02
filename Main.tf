@@ -146,6 +146,8 @@ module "observability" {
 
   cluster_name       = module.eks.cluster_name
   log_retention_days = 7
+  oidc_provider_url  = module.eks.oidc_provider_url
+  oidc_provider_arn  = module.eks.oidc_provider_arn
   tags               = local.tags
 
   depends_on = [module.eks]

@@ -2,8 +2,16 @@ output "cluster_endpoint" {
   value = aws_eks_cluster.bedrock.endpoint
 }
 
+output "cluster_certificate_authority_data" {
+  value = aws_eks_cluster.bedrock.certificate_authority[0].data
+}
+
 output "cluster_name" {
   value = aws_eks_cluster.bedrock.name
+}
+
+output "cluster_ca_certificate" {
+  value = aws_eks_cluster.bedrock.certificate_authority[0].data
 }
 
 output "region" {
@@ -11,9 +19,13 @@ output "region" {
 }
 
 output "vpc_id" {
-  value = aws_vpc.bedrock.id
+  value = var.vpc_id
 }
 
-output "assets_bucket_name" {
-  value = aws_s3_bucket.bedrock_assets.id
+output "oidc_provider_arn" {
+  value = aws_iam_openid_connect_provider.bedrock.arn
+}
+
+output "oidc_provider_url" {
+  value = aws_iam_openid_connect_provider.bedrock.url
 }

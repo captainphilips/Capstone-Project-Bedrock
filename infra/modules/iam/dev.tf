@@ -49,8 +49,8 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
     namespace = "kube-system"
   }
 
-  # EKS creates aws-auth automatically. We force_conflicts to take ownership.
-  force_conflicts = true
+  # EKS creates aws-auth automatically. We force conflicts to take ownership.
+  force = true
 
   data = {
     mapUsers = yamlencode([
@@ -63,5 +63,6 @@ resource "kubernetes_config_map_v1_data" "aws_auth" {
     ])
   }
 
-  depends_on = [aws_eks_cluster.bedrock]
+  # Removed invalid cross-module dependency
+  # depends_on = [aws_eks_cluster.bedrock]
 }

@@ -1,0 +1,55 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowALBIngressController",
+      "Effect": "Allow",
+      "Action": [
+        "elbv2:DescribeLoadBalancers",
+        "elbv2:DescribeLoadBalancerAttributes",
+        "elbv2:DescribeListeners",
+        "elbv2:DescribeListenerCertificates",
+        "elbv2:DescribeSSLPolicies",
+        "elbv2:DescribeRules",
+        "elbv2:DescribeTargetGroups",
+        "elbv2:DescribeTargetGroupAttributes",
+        "elbv2:DescribeTargets",
+        "elbv2:DescribeTags"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowCreateALBResources",
+      "Effect": "Allow",
+      "Action": [
+        "elbv2:CreateLoadBalancer",
+        "elbv2:CreateTargetGroup",
+        "elbv2:CreateListener",
+        "elbv2:DeleteLoadBalancer",
+        "elbv2:DeleteTargetGroup",
+        "elbv2:DeleteListener"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "AllowManageALBTags",
+      "Effect": "Allow",
+      "Action": [
+        "elbv2:AddTags",
+        "elbv2:RemoveTags"
+      ],
+      "Resource": "arn:aws:elasticloadbalancing:*:*:*"
+    },
+    {
+      "Sid": "AllowEC2Permissions",
+      "Effect": "Allow",
+      "Action": [
+        "ec2:AuthorizeSecurityGroupIngress",
+        "ec2:RevokeSecurityGroupIngress",
+        "ec2:DescribeSecurityGroups",
+        "ec2:DescribeNetworkInterfaces"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

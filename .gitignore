@@ -1,5 +1,31 @@
+# Terraform files
 .terraform/
+.terraform.lock.hcl
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
-*.zip
+terraform.tfplan
+tfplan
+
+# Environment
+.env
+.env.local
+*.tfvars.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Build artifacts
+services/lambda/build/*.zip
+*.pyc
+__pycache__/
+
+# Logs
+*.log
+
+# Generated files
+grading.json

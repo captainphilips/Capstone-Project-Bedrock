@@ -1,0 +1,55 @@
+name: Terraform Plan & Validation
+
+on:
+  pull_request:
+    paths:
+      - 'infra/**'
+      - '.github/workflows/terraform-plan.yml'
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        environment: [dev, staging, prod]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Format check
+        run: terraform fmt -recursive -check infra/
+
+      - name: Validate
+        run: |
+          cd infra/envs/${{ matrix.environment }}
+          terraform init -backend=false
+          terraform validate
+
+      - name: TFLint
+        uses: terraform-linters/setup-tflint@v3
+        continue-on-error: true
+      - run: tflint --init && tflint infra/
+
+      - name: Plan
+        run: |
+          cd infra/envs/${{ matrix.environment }}
+          terraform init -backend=false
+          terraform plan -out=tfplan
+          terraform show -json tfplan > plan.json
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.environment }}-plan
+          path: infra/envs/${{ matrix.environment }}/plan.json

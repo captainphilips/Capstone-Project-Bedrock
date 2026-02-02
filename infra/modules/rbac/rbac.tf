@@ -11,12 +11,13 @@ resource "kubernetes_cluster_role_binding" "dev_view" {
     name      = "view"
   }
 
-  # Subject = the username we mapped in aws-auth
+  # Subject = the custom group we mapped in aws-auth
   subject {
-    kind      = "User"
-    name      = "bedrock-dev-view"
+    kind      = "Group"
+    name      = "dev-viewers"
     api_group = "rbac.authorization.k8s.io"
   }
 
-  depends_on = [aws_eks_cluster.bedrock, kubernetes_config_map_v1_data.aws_auth]
+  # Note: depends_on references modules - ensure this is called after EKS and IAM modules
+  # depends_on = [aws_eks_cluster.bedrock, kubernetes_config_map_v1_data.aws_auth]
 }

@@ -2,72 +2,65 @@
 """
 Lambda handler for Bedrock asset processor.
 
-This function processes uploaded files from S3 and performs:
-- File validation
-- Metadata extraction
-- Asset optimization
+This function is triggered by S3 upload events and processes uploaded files.
 """
 
 import json
-import boto3
 import logging
-from typing import Any, Dict
+from urllib.parse import unquote_plus
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-s3_client = boto3.client("s3")
 
-
-def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
+def lambda_handler(event, context):
     """
-    Handler function for S3 upload events.
-
+    Triggered by S3 upload. Logs the uploaded file name.
+    
     Args:
         event: Lambda event from S3
         context: Lambda context
-
+    
     Returns:
         Response dictionary with statusCode and body
     """
     try:
         logger.info(f"Received event: {json.dumps(event)}")
-
-        # Extract S3 bucket and key from event
-        bucket = event.get("Records", [{}])[0].get("s3", {}).get("bucket", {}).get("name")
-        key = event.get("Records", [{}])[0].get("s3", {}).get("object", {}).get("key")
-
-        if not bucket or not key:
-            logger.warning("Missing bucket or key in event")
+        
+        # Validate event structure
+        if 'Records' not in event or not event['Records']:
+            logger.warning("No Records found in event")
             return {
-                "statusCode": 400,
-                "body": json.dumps({"error": "Missing bucket or key"}),
+                'statusCode': 400,
+                'body': json.dumps('No records in event')
             }
-
-        logger.info(f"Processing file: s3://{bucket}/{key}")
-
-        # Get object metadata
-        obj = s3_client.head_object(Bucket=bucket, Key=key)
-        logger.info(f"Object metadata: {obj['Metadata']}")
-
-        # Process the asset (placeholder for actual logic)
-        result = {
-            "bucket": bucket,
-            "key": key,
-            "size": obj.get("ContentLength", 0),
-            "content_type": obj.get("ContentType", "unknown"),
-            "status": "processed",
-        }
-
-        logger.info(f"Processing complete: {json.dumps(result)}")
+        
+        for record in event['Records']:
+            try:
+                # Extract S3 event details
+                s3_info = record.get('s3', {})
+                bucket = s3_info.get('bucket', {}).get('name', 'unknown')
+                key = s3_info.get('object', {}).get('key', 'unknown')
+                
+                # Decode URL-encoded key
+                key = unquote_plus(key)
+                
+                logger.info(f"Image received: {key}")
+                logger.info(f"Bucket: {bucket}")
+                
+            except (KeyError, TypeError) as e:
+                logger.error(f"Error parsing record: {str(e)}")
+                continue
+        
         return {
-            "statusCode": 200,
-            "body": json.dumps(result),
+            'statusCode': 200,
+            'body': json.dumps('Processing complete')
         }
-
+    
     except Exception as e:
-        logger.error(f"Error processing asset: {str(e)}", exc_info=True)
+        logger.error(f"Error processing event: {str(e)}", exc_info=True)
         return {
-            "statusCode": 500,
-            "body": json.dumps({"error": str(e)}),
+            'statusCode': 500,
+            'body': json.dumps(f'Error: {str(e)}')
         }
+

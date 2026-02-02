@@ -13,7 +13,26 @@
 # Input variables are defined in variables.tf
 # Outputs are defined in outputs.tf
 
-# TODO: Implement EKS cluster resource
+############################
+# Control Plane Logs
+############################
+# Enable CloudWatch logging for EKS control plane
+resource "aws_cloudwatch_log_group" "eks_cluster" {
+  name              = "/aws/eks/project-bedrock-cluster/cluster"
+  retention_in_days = 7
+
+  tags = {
+    Project = "Bedrock"
+  }
+}
+
+############################
+# EKS Cluster Resource
+############################
+# TODO: Implement aws_eks_cluster resource with:
+#   - enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+#   - cloudwatch_log_group_name = aws_cloudwatch_log_group.eks_cluster.name
+
 # TODO: Implement EKS node groups
 # TODO: Implement OIDC provider for IRSA
 # TODO: Implement security groups

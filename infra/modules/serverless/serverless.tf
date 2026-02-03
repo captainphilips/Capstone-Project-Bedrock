@@ -1,20 +1,15 @@
 ################################################################################
-# Variables
-################################################################################
-variable "student_id" {
-  # Student ID set to 0347
-  default = "0347"
-}
-
-################################################################################
 # S3 Bucket
 ################################################################################
 resource "aws_s3_bucket" "bedrock_assets" {
-  bucket = "bedrock-assets-${var.student_id}"
+  bucket = var.assets_bucket_name
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_s3_bucket_ownership_controls" "assets" {
@@ -51,9 +46,12 @@ resource "aws_iam_role" "lambda_role" {
     }]
   })
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_basic" {
@@ -66,15 +64,18 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 # Lambda Function
 ################################################################################
 resource "aws_lambda_function" "asset_processor" {
-  function_name = "bedrock-asset-processor"
+  function_name = var.lambda_function_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "handler.lambda_handler"
-  runtime       = "python3.12"
-  filename      = "../lambda/handler.zip"
+  runtime       = var.lambda_runtime
+  filename      = "${path.root}/services/lambda/build/handler.zip"
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 ################################################################################

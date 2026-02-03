@@ -11,11 +11,14 @@ on:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    environment:
-      name: production
+    permissions:
+      id-token: write
+      contents: read
     strategy:
       matrix:
-        environment: [dev]
+        environment: [dev, staging, prod]
+    environment:
+      name: ${{ matrix.environment == 'prod' && 'production' || matrix.environment }}
 
     steps:
       - uses: actions/checkout@v3

@@ -9,6 +9,9 @@ on:
 jobs:
   plan:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     strategy:
       matrix:
         environment: [dev, staging, prod]
@@ -28,7 +31,7 @@ jobs:
           aws-region: us-east-1
 
       - name: Format check
-        run: terraform fmt -recursive -check infra/
+        run: terraform fmt -recursive -check .
 
       - name: Validate
         run: |
@@ -38,8 +41,10 @@ jobs:
 
       - name: TFLint
         uses: terraform-linters/setup-tflint@v3
+
+      - name: Run TFLint
+        run: tflint --init && tflint infra/
         continue-on-error: true
-      - run: tflint --init && tflint infra/
 
       - name: Plan
         run: |

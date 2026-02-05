@@ -17,8 +17,6 @@ locals {
   region               = var.aws_region
   environment          = var.environment
   cluster_name         = "project-bedrock-dev-cluster"
-  assets_bucket_name   = "bedrock-assets-dev-0347"
-  lambda_function_name = "bedrock-asset-processor-dev"
   azs                  = ["us-east-1a", "us-east-1b"]
 
   tags = {
@@ -90,6 +88,6 @@ output "cluster_name" {
 }
 
 output "assets_bucket_name" {
-  description = "S3 assets bucket name"
-  value       = module.serverless.assets_bucket_name
+  description = "Lambda function name"
+  value       = module.serverless.lambda_name
 }

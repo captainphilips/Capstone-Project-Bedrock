@@ -30,6 +30,7 @@ help:
 	@echo "  destroy-staging  Destroy staging infrastructure"
 	@echo "  destroy-prod     Destroy prod infrastructure"
 	@echo "  package-lambda   Package Lambda function"
+	@echo "  bootstrap-argocd Bootstrap Argo CD for GitOps"
 	@echo "  clean            Clean Terraform cache and build artifacts"
 
 fmt:
@@ -120,6 +121,9 @@ destroy-prod: init-prod
 package-lambda:
 	@echo "Packaging Lambda function..."
 	@bash scripts/package_lambda.sh
+
+bootstrap-argocd:
+	@bash scripts/bootstrap_argocd.sh
 
 clean:
 	@echo "Cleaning Terraform cache and build artifacts..."

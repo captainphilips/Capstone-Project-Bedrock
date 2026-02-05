@@ -25,7 +25,7 @@ Amazon Elastic Kubernetes Service (EKS) was selected as the core orchestration p
 
 ## 3. Your Mission: Project Bedrock
 
-As the Cloud DevOps Engineer, you are responsible for delivering Project Bedrock, the foundational Kubernetes platform that will support InnovateMart’s production workloads.
+As the Cloud DevOps Engineer, you are responsible for delivering Project Bedrock, the foundational Kubernetes platform that will support InnovateMart's production workloads.
 
 Your mission is to design, provision, and operationalize a production-grade Amazon EKS environment that hosts the AWS Retail Store Sample Application and meets enterprise standards.
 
@@ -75,6 +75,7 @@ This platform will serve as the backbone of InnovateMart’s cloud strategy, set
   - **`modules/`** - Reusable Terraform modules (VPC, EKS, RBAC, observability, serverless)
   - **`envs/`** - Per-environment roots (dev, staging, prod)
 - **`lambda/hello/`** - Lambda function source code and build artifacts
+- **`gitops/`** - GitOps manifests and environment overlays
 - **`policies/`** - IAM and RBAC policy definitions
 - **`scripts/`** - Helper scripts for deployment and management
 - **`.github/workflows/`** - CI/CD automation
@@ -99,6 +100,18 @@ make apply-dev
 # View outputs
 make output-dev
 ```
+
+## GitOps Bootstrap
+
+Install Argo CD and point it at this repo's GitOps overlays:
+
+```bash
+REPO_URL="https://github.com/captainphilips/Capstone-Project-Bedrock.git"
+TARGET_ENV=dev
+./scripts/bootstrap_argocd.sh
+```
+
+GitOps content lives under `gitops/overlays/{dev,staging,prod}` and manages namespaces and RBAC for each environment.
 
 ## State Management
 

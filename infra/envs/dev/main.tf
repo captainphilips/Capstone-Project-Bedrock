@@ -51,16 +51,6 @@ module "eks" {
 }
 
 ############################
-# RBAC Module
-############################
-module "rbac" {
-  source = "../../modules/rbac"
-
-  cluster_name = module.eks.cluster_name
-  tags         = local.tags
-}
-
-############################
 # Observability Module
 ############################
 module "observability" {

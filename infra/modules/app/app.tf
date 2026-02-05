@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "retail_app" {
   metadata {
-    name = "retail-app"
+    name = var.app_namespace
     labels = {
       Project = "Bedrock"
     }

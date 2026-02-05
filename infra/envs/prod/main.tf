@@ -46,7 +46,7 @@ module "eks" {
 
   cluster_name       = local.cluster_name
   vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
+  subnet_ids         = module.vpc.private_subnets
   tags               = local.tags
 }
 
@@ -84,18 +84,8 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  description = "Public subnet IDs"
-  value       = module.vpc.public_subnet_ids
-}
-
-output "private_subnet_ids" {
   description = "Private subnet IDs"
-  value       = module.vpc.private_subnet_ids
-}
-
-output "nat_gateway_ips" {
-  description = "NAT Gateway IPs"
-  value       = module.vpc.nat_gateway_ips
+  value       = module.vpc.private_subnets
 }
 
 output "cluster_endpoint" {

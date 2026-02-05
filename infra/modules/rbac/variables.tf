@@ -6,6 +6,12 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "oidc_provider" {
+  description = "OIDC provider ARN (compat alias)"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)

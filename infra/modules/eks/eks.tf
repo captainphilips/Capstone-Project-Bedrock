@@ -1,6 +1,9 @@
 ################################################################################
 # EKS Cluster
 ################################################################################
+locals {
+  effective_subnet_ids = coalescelist(var.subnet_ids, var.private_subnet_ids)
+}
 
 resource "aws_eks_cluster" "bedrock" {
   name               = var.cluster_name
@@ -9,7 +12,7 @@ resource "aws_eks_cluster" "bedrock" {
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   vpc_config {
-    subnet_ids              = var.private_subnet_ids
+    subnet_ids              = local.effective_subnet_ids
     endpoint_public_access  = true
     endpoint_private_access = true
   }
@@ -37,7 +40,7 @@ resource "aws_eks_node_group" "bedrock" {
   cluster_name    = aws_eks_cluster.bedrock.name
   node_group_name = "project-bedrock-nodes"
   node_role_arn   = aws_iam_role.eks_nodes.arn
-  subnet_ids      = var.private_subnet_ids
+  subnet_ids      = local.effective_subnet_ids
   instance_types  = ["t3.medium"]
 
   scaling_config {

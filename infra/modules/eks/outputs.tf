@@ -29,3 +29,8 @@ output "oidc_provider_arn" {
 output "oidc_provider_url" {
   value = aws_iam_openid_connect_provider.bedrock.url
 }
+
+output "oidc_provider" {
+  description = "OIDC provider ARN (compat alias)"
+  value       = aws_iam_openid_connect_provider.bedrock.arn
+}

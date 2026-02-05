@@ -4,6 +4,7 @@
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
+  default     = "project-bedrock-cluster"
 }
 
 variable "cluster_version" {
@@ -20,6 +21,12 @@ variable "vpc_id" {
 variable "private_subnet_ids" {
   description = "Private subnet IDs for worker nodes"
   type        = list(string)
+}
+
+variable "subnet_ids" {
+  description = "Subnet IDs for worker nodes (compat alias)"
+  type        = list(string)
+  default     = null
 }
 
 variable "tags" {

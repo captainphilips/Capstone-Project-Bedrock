@@ -13,6 +13,12 @@ variable "lambda_function_name" {
   default     = "bedrock-asset-processor"
 }
 
+variable "function_name" {
+  description = "Lambda function name (compat alias)"
+  type        = string
+  default     = null
+}
+
 variable "lambda_runtime" {
   description = "Lambda runtime"
   type        = string

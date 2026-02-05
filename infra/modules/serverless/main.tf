@@ -1,6 +1,10 @@
 ################################################################################
 # Serverless Module - S3, Lambda, & Triggers
 ################################################################################
+locals {
+  effective_lambda_name = coalesce(var.function_name, var.lambda_function_name)
+}
+
 resource "aws_s3_bucket" "bedrock_assets" {
   bucket = var.assets_bucket_name
 
@@ -63,7 +67,7 @@ resource "aws_iam_role_policy_attachment" "lambda_basic" {
 # Lambda Function
 ################################################################################
 resource "aws_lambda_function" "asset_processor" {
-  function_name = var.lambda_function_name
+  function_name = local.effective_lambda_name
   role          = aws_iam_role.lambda_role.arn
   handler       = "handler.lambda_handler"
   runtime       = var.lambda_runtime

@@ -34,8 +34,7 @@ locals {
 module "vpc" {
   source = "../../modules/vpc"
 
-  azs  = local.azs
-  tags = local.tags
+  vpc_cidr = "10.0.0.0/16"
 }
 
 ############################
@@ -44,23 +43,18 @@ module "vpc" {
 module "eks" {
   source = "../../modules/eks"
 
-  cluster_name       = local.cluster_name
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  tags               = local.tags
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
 }
 
 ############################
-# Observability Module
+# RBAC Module
 ############################
-module "observability" {
-  source = "../../modules/observability"
+module "rbac" {
+  source = "../../modules/rbac"
 
-  cluster_name       = module.eks.cluster_name
-  log_retention_days = 7
-  oidc_provider_url  = module.eks.oidc_provider_url
-  oidc_provider_arn  = module.eks.oidc_provider_arn
-  tags               = local.tags
+  cluster_name  = module.eks.cluster_name
+  oidc_provider = module.eks.oidc_provider
 }
 
 ############################
@@ -69,10 +63,7 @@ module "observability" {
 module "serverless" {
   source = "../../modules/serverless"
 
-  assets_bucket_name   = local.assets_bucket_name
-  lambda_function_name = local.lambda_function_name
-  lambda_runtime       = "python3.11"
-  tags                 = local.tags
+  function_name = "bedrock-hello"
 }
 
 ############################
@@ -84,18 +75,8 @@ output "vpc_id" {
 }
 
 output "public_subnet_ids" {
-  description = "Public subnet IDs"
-  value       = module.vpc.public_subnet_ids
-}
-
-output "private_subnet_ids" {
   description = "Private subnet IDs"
-  value       = module.vpc.private_subnet_ids
-}
-
-output "nat_gateway_ips" {
-  description = "NAT Gateway IPs"
-  value       = module.vpc.nat_gateway_ips
+  value       = module.vpc.private_subnets
 }
 
 output "cluster_endpoint" {

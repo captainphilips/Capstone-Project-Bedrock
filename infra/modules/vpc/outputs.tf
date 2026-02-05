@@ -3,20 +3,10 @@
 ############################
 output "vpc_id" {
   description = "VPC ID"
-  value       = aws_vpc.bedrock.id
+  value       = aws_vpc.this.id
 }
 
-output "public_subnet_ids" {
-  description = "Public subnet IDs"
-  value       = [for subnet in aws_subnet.public : subnet.id]
-}
-
-output "private_subnet_ids" {
+output "private_subnets" {
   description = "Private subnet IDs"
-  value       = [for subnet in aws_subnet.private : subnet.id]
-}
-
-output "nat_gateway_ips" {
-  description = "NAT Gateway public IPs"
-  value       = [for eip in aws_eip.nat : eip.public_ip]
+  value       = aws_subnet.private[*].id
 }

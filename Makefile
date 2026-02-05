@@ -42,7 +42,7 @@ fmt-check:
 
 validate:
 	@echo "Validating Terraform configuration..."
-	@cd $(TERRAFORM_DIR) && $(TF) init -backend=false && $(TF) validate
+	@cd $(TERRAFORM_DIR) && $(TF) init && $(TF) validate
 
 lint:
 	@echo "Running tflint on Terraform files..."

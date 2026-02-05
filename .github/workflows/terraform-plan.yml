@@ -34,8 +34,8 @@ jobs:
         run: terraform fmt -recursive -check .
 
       - name: Validate
+        working-directory: infra/envs/${{ matrix.environment }}
         run: |
-          cd infra/envs/${{ matrix.environment }}
           terraform init
           terraform validate
 
@@ -47,8 +47,8 @@ jobs:
         continue-on-error: true
 
       - name: Plan
+        working-directory: infra/envs/${{ matrix.environment }}
         run: |
-          cd infra/envs/${{ matrix.environment }}
           terraform init
           terraform plan -out=tfplan
           terraform show -json tfplan > plan.json

@@ -4,3 +4,4 @@ This folder contains Kubernetes manifests managed by GitOps tools such as Argo C
 
 - `base/` contains shared resources (namespaces, RBAC).
 - `overlays/` contains per-environment overlays (dev, staging, prod).
+- `argocd/applications/` contains Argo CD Application manifests per environment.

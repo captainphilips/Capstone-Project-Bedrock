@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: bedrock-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/captainphilips/Capstone-Project-Bedrock.git
+    targetRevision: main
+    path: gitops/overlays/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

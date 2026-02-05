@@ -36,7 +36,7 @@ jobs:
       - name: Validate
         run: |
           cd infra/envs/${{ matrix.environment }}
-          terraform init -backend=false
+          terraform init
           terraform validate
 
       - name: TFLint
@@ -49,7 +49,7 @@ jobs:
       - name: Plan
         run: |
           cd infra/envs/${{ matrix.environment }}
-          terraform init -backend=false
+          terraform init
           terraform plan -out=tfplan
           terraform show -json tfplan > plan.json
 

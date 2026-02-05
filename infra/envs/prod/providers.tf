@@ -13,18 +13,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.23"
     }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "~> 2.12"
+    tls = {
+      source  = "hashicorp/tls"
+      version = "~> 4.0"
     }
-  }
-
-  backend "s3" {
-    bucket         = "project-bedrock-0347-tf-state"
-    key            = "prod/terraform.tfstate"
-    region         = "us-east-1"
-    dynamodb_table = "project-bedrock-tf-lock"
-    encrypt        = true
   }
 }
 

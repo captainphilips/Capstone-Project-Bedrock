@@ -4,7 +4,7 @@
 
 TERRAFORM_DIR := infra/envs/dev
 TF := terraform
-LAMBDA_DIR := services/lambda
+LAMBDA_DIR := lambda/hello
 
 help:
 	@echo "Project Bedrock - Infrastructure Management"

@@ -5,9 +5,9 @@ A comprehensive Terraform-based infrastructure-as-code solution for deploying a 
 ## Structure
 
 - **`infra/`** - Terraform infrastructure code
-  - **`modules/`** - Reusable Terraform modules (VPC, EKS, IAM, app, observability, serverless, RDS)
+  - **`modules/`** - Reusable Terraform modules (VPC, EKS, RBAC, observability, serverless)
   - **`envs/`** - Per-environment configurations (dev, staging, prod)
-- **`services/lambda/`** - Lambda function source code and build artifacts
+- **`lambda/hello/`** - Lambda function source code and build artifacts
 - **`policies/`** - IAM and RBAC policy definitions
 - **`scripts/`** - Helper scripts for deployment and management
 - **`.github/workflows/`** - CI/CD automation
@@ -37,12 +37,9 @@ make output-dev
 
 - **VPC** - Virtual Private Cloud with public/private subnets, NAT gateways, and routing
 - **EKS** - Elastic Kubernetes Service cluster with node groups and OIDC provider
-- **IAM** - Developer users and AWS auth mappings
 - **RBAC** - Kubernetes role-based access control
 - **Observability** - CloudWatch logging and monitoring
-- **App** - Retail application deployment (Kubernetes + Helm)
 - **Serverless** - S3 bucket and Lambda function processor
-- **RDS** - (Optional) MySQL and PostgreSQL databases
 
 ## State Management
 

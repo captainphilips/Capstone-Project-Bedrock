@@ -20,7 +20,7 @@ tfplan
 .DS_Store
 
 # Build artifacts
-services/lambda/build/*.zip
+lambda/hello/build/*.zip
 *.pyc
 __pycache__/
 

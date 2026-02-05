@@ -6,9 +6,9 @@ locals {
 }
 
 resource "aws_eks_cluster" "bedrock" {
-  name               = var.cluster_name
-  role_arn           = aws_iam_role.eks_cluster.arn
-  version            = var.cluster_version
+  name                      = var.cluster_name
+  role_arn                  = aws_iam_role.eks_cluster.arn
+  version                   = var.cluster_version
   enabled_cluster_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   vpc_config {

@@ -14,10 +14,10 @@ variable "environment" {
 }
 
 locals {
-  region               = var.aws_region
-  environment          = var.environment
-  cluster_name         = "project-bedrock-dev-cluster"
-  azs                  = ["us-east-1a", "us-east-1b"]
+  region       = var.aws_region
+  environment  = var.environment
+  cluster_name = "project-bedrock-dev-cluster"
+  azs          = ["us-east-1a", "us-east-1b"]
 
   tags = {
     Project     = "Bedrock"

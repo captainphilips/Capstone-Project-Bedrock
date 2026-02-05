@@ -38,11 +38,11 @@ resource "aws_iam_role_policy_attachment" "cw_agent" {
 ################################################################################
 
 resource "aws_eks_addon" "cloudwatch" {
-  cluster_name             = var.cluster_name
-  addon_name               = "amazon-cloudwatch-observability"
-  addon_version            = "v1.3.0-eksbuild.1"
+  cluster_name  = var.cluster_name
+  addon_name    = "amazon-cloudwatch-observability"
+  addon_version = "v1.3.0-eksbuild.1"
   # Check latest: aws eks describe-addon-versions --addon-name amazon-cloudwatch-observability
-  service_account_role_arn = aws_iam_role.cloudwatch_agent.arn
+  service_account_role_arn    = aws_iam_role.cloudwatch_agent.arn
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 

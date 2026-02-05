@@ -21,12 +21,17 @@ variable "vpc_id" {
 variable "private_subnet_ids" {
   description = "Private subnet IDs for worker nodes"
   type        = list(string)
+  default     = null
 }
 
 variable "subnet_ids" {
   description = "Subnet IDs for worker nodes (compat alias)"
   type        = list(string)
   default     = null
+  validation {
+    condition     = var.subnet_ids != null || var.private_subnet_ids != null
+    error_message = "Provide subnet_ids or private_subnet_ids."
+  }
 }
 
 variable "tags" {

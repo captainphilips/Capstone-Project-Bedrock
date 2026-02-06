@@ -67,9 +67,10 @@ module "observability" {
 module "rbac" {
   source = "../../modules/rbac"
 
-  cluster_name  = module.eks.cluster_name
-  oidc_provider = module.eks.oidc_provider
-  tags          = local.tags
+  cluster_name       = module.eks.cluster_name
+  oidc_provider      = module.eks.oidc_provider
+  assets_bucket_name = "bedrock-assets-0347"
+  tags               = local.tags
 }
 
 ############################

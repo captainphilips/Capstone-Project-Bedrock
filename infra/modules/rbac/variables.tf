@@ -16,3 +16,8 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "assets_bucket_name" {
+  description = "Assets bucket name for upload access"
+  type        = string
+}

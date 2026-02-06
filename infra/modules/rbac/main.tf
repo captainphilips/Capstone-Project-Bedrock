@@ -53,6 +53,25 @@ resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
   })
 }
 
+resource "aws_iam_user_policy" "bedrock_dev_view_bucket_put" {
+  name = "bedrock-dev-view-bucket-put"
+  user = aws_iam_user.bedrock_dev_view.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:PutObjectAcl"
+        ]
+        Resource = "arn:aws:s3:::${var.assets_bucket_name}/*"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_access_key" "bedrock_dev_view" {
   user = aws_iam_user.bedrock_dev_view.name
 }

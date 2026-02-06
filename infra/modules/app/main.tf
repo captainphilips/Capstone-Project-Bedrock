@@ -31,5 +31,12 @@ resource "helm_release" "retail_store" {
   create_namespace = true
   timeout          = 600
 
-  values = [file("${path.module}/values.yaml")]
+  values = [
+    templatefile("${path.module}/values.yaml", {
+      catalog_db_endpoint = var.catalog_db_endpoint
+      catalog_db_port     = var.catalog_db_port
+      orders_db_endpoint  = var.orders_db_endpoint
+      orders_db_port      = var.orders_db_port
+    })
+  ]
 }

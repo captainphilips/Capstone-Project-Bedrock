@@ -49,6 +49,19 @@ module "eks" {
 }
 
 ############################
+# Persistence Module
+############################
+module "persistence" {
+  source = "../../modules/persistence"
+
+  environment        = local.environment
+  vpc_id             = module.vpc.vpc_id
+  vpc_cidr           = "10.0.0.0/16"
+  private_subnet_ids = module.vpc.private_subnets
+  tags               = local.tags
+}
+
+############################
 # RBAC Module
 ############################
 module "rbac" {
@@ -85,13 +98,46 @@ module "serverless" {
 }
 
 ############################
+# External Secrets Module
+############################
+module "external_secrets" {
+  source = "../../modules/external_secrets"
+
+  cluster_name        = module.eks.cluster_name
+  oidc_provider_arn   = module.eks.oidc_provider_arn
+  oidc_provider_url   = module.eks.oidc_provider_url
+  region              = local.region
+  namespace           = "retail-app"
+  mysql_secret_arn    = module.persistence.mysql_secret_arn
+  postgres_secret_arn = module.persistence.postgres_secret_arn
+}
+
+############################
+# ALB Controller Module
+############################
+module "alb_controller" {
+  source = "../../modules/alb_controller"
+
+  cluster_name       = module.eks.cluster_name
+  oidc_provider_arn  = module.eks.oidc_provider_arn
+  oidc_provider_url  = module.eks.oidc_provider_url
+  vpc_id             = module.vpc.vpc_id
+  region             = local.region
+  namespace          = "retail-app"
+}
+
+############################
 # App Module
 ############################
 module "app" {
   source = "../../modules/app"
 
-  cluster_name = module.eks.cluster_name
-  namespace    = "retail-app"
+  cluster_name        = module.eks.cluster_name
+  namespace           = "retail-app"
+  catalog_db_endpoint = module.persistence.mysql_endpoint
+  catalog_db_port     = module.persistence.mysql_port
+  orders_db_endpoint  = module.persistence.postgres_endpoint
+  orders_db_port      = module.persistence.postgres_port
 }
 
 ############################

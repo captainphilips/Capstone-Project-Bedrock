@@ -9,7 +9,7 @@ variable "function_name" {
 variable "assets_bucket_name" {
   description = "S3 bucket for assets"
   type        = string
-  default     = "bedrock-asset-ALT/SOE/025/0347"
+  default     = "bedrock-assets-alt-soe-025-0347"
 }
 
 variable "tags" {

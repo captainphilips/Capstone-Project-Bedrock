@@ -17,6 +17,45 @@ jobs:
     strategy:
       matrix:
         environment: [dev, staging, prod]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Apply
+        working-directory: infra/envs/${{ matrix.environment }}
+        run: |
+          terraform init
+          terraform apply -auto-approve
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'infra/**'
+      - '.github/workflows/terraform-apply.yml'
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        environment: [dev, staging, prod]
     environment:
       name: ${{ matrix.environment == 'prod' && 'production' || matrix.environment }}
 

@@ -78,8 +78,18 @@ module "serverless" {
   source = "../../modules/serverless"
 
   function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-asset-ALT/SOE/025/0347"
+  assets_bucket_name = "bedrock-assets-alt-soe-025-0347"
   tags               = local.tags
+}
+
+############################
+# App Module
+############################
+module "app" {
+  source = "../../modules/app"
+
+  cluster_name = module.eks.cluster_name
+  namespace    = "retail-app"
 }
 
 ############################
@@ -108,4 +118,16 @@ output "region" {
 output "assets_bucket_name" {
   description = "Assets bucket name"
   value       = module.serverless.assets_bucket_name
+}
+
+output "bedrock_dev_view_access_key_id" {
+  description = "Access key ID for bedrock-dev-view"
+  value       = module.rbac.bedrock_dev_view_access_key_id
+  sensitive   = true
+}
+
+output "bedrock_dev_view_secret_access_key" {
+  description = "Secret access key for bedrock-dev-view"
+  value       = module.rbac.bedrock_dev_view_secret_access_key
+  sensitive   = true
 }

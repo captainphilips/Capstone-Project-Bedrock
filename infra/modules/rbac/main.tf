@@ -31,3 +31,28 @@ resource "aws_iam_user" "bedrock_dev_view" {
     }
   )
 }
+
+resource "aws_iam_user_policy_attachment" "bedrock_dev_view_ro" {
+  user       = aws_iam_user.bedrock_dev_view.name
+  policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
+}
+
+resource "aws_iam_access_key" "bedrock_dev_view" {
+  user = aws_iam_user.bedrock_dev_view.name
+}
+
+resource "aws_eks_access_entry" "bedrock_dev_view" {
+  cluster_name  = var.cluster_name
+  principal_arn = aws_iam_user.bedrock_dev_view.arn
+  type          = "STANDARD"
+}
+
+resource "aws_eks_access_policy_association" "bedrock_dev_view" {
+  cluster_name  = var.cluster_name
+  policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
+  principal_arn = aws_iam_user.bedrock_dev_view.arn
+
+  access_scope {
+    type = "cluster"
+  }
+}

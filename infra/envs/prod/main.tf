@@ -41,10 +41,11 @@ module "vpc" {
 module "eks" {
   source = "../../modules/eks"
 
-  cluster_name = local.cluster_name
-  vpc_id       = module.vpc.vpc_id
-  subnet_ids   = module.vpc.private_subnets
-  tags         = local.tags
+  cluster_name    = local.cluster_name
+  cluster_version = "1.34"
+  vpc_id          = module.vpc.vpc_id
+  subnet_ids      = module.vpc.private_subnets
+  tags            = local.tags
 }
 
 ############################
@@ -78,7 +79,7 @@ module "serverless" {
   source = "../../modules/serverless"
 
   function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-assets-alt-soe-025-0347"
+  assets_bucket_name = "bedrock-assets-0347"
   tags               = local.tags
 }
 

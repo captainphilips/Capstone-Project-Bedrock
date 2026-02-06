@@ -12,4 +12,22 @@ resource "aws_iam_role" "eks_irsa_role" {
       Action    = "sts:AssumeRoleWithWebIdentity"
     }]
   })
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
+}
+
+resource "aws_iam_user" "bedrock_dev_view" {
+  name = "bedrock-dev-view"
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }

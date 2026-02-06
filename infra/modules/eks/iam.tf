@@ -19,9 +19,12 @@ resource "aws_iam_role" "eks_cluster" {
     ]
   })
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "eks_cluster" {
@@ -54,9 +57,12 @@ resource "aws_iam_role" "eks_nodes" {
     ]
   })
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "eks_nodes" {
@@ -101,9 +107,12 @@ resource "aws_iam_role" "ebs_csi_driver" {
   name               = "project-bedrock-ebs-csi-role"
   assume_role_policy = data.aws_iam_policy_document.ebs_csi_assume.json
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "ebs_csi_driver" {
@@ -122,4 +131,11 @@ resource "aws_iam_openid_connect_provider" "bedrock" {
   client_id_list  = ["sts.amazonaws.com"]
   thumbprint_list = [data.tls_certificate.bedrock.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.bedrock.identity[0].oidc[0].issuer
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }

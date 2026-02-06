@@ -16,8 +16,7 @@ variable "environment" {
 locals {
   region       = var.aws_region
   environment  = var.environment
-  cluster_name = "project-bedrock-dev-cluster"
-  azs          = ["us-east-1a", "us-east-1b"]
+  cluster_name = "project-bedrock-cluster"
 
   tags = {
     Project     = "Bedrock"
@@ -33,6 +32,7 @@ module "vpc" {
   source = "../../modules/vpc"
 
   vpc_cidr = "10.0.0.0/16"
+  tags     = local.tags
 }
 
 ############################
@@ -41,8 +41,10 @@ module "vpc" {
 module "eks" {
   source = "../../modules/eks"
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  cluster_name = local.cluster_name
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnets
+  tags         = local.tags
 }
 
 ############################
@@ -53,6 +55,7 @@ module "rbac" {
 
   cluster_name  = module.eks.cluster_name
   oidc_provider = module.eks.oidc_provider
+  tags          = local.tags
 }
 
 ############################
@@ -61,7 +64,9 @@ module "rbac" {
 module "serverless" {
   source = "../../modules/serverless"
 
-  function_name = "bedrock-hello"
+  function_name      = "bedrock-asset-processor"
+  assets_bucket_name = "bedrock-assets-alt-soe-025-0347"
+  tags               = local.tags
 }
 
 ############################
@@ -70,11 +75,6 @@ module "serverless" {
 output "vpc_id" {
   description = "VPC ID"
   value       = module.vpc.vpc_id
-}
-
-output "public_subnet_ids" {
-  description = "Private subnet IDs"
-  value       = module.vpc.private_subnets
 }
 
 output "cluster_endpoint" {
@@ -87,7 +87,12 @@ output "cluster_name" {
   value       = module.eks.cluster_name
 }
 
+output "region" {
+  description = "AWS region"
+  value       = local.region
+}
+
 output "assets_bucket_name" {
-  description = "Lambda function name"
-  value       = module.serverless.lambda_name
+  description = "Assets bucket name"
+  value       = module.serverless.assets_bucket_name
 }

@@ -23,9 +23,12 @@ resource "aws_iam_role" "cloudwatch_agent" {
     ]
   })
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_iam_role_policy_attachment" "cw_agent" {
@@ -46,7 +49,10 @@ resource "aws_eks_addon" "cloudwatch" {
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
 
-  tags = {
-    Project = "Bedrock"
-  }
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }

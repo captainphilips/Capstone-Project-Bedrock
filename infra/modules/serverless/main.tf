@@ -12,6 +12,13 @@ resource "aws_iam_role" "lambda_role" {
       Action    = "sts:AssumeRole"
     }]
   })
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }
 
 resource "aws_lambda_function" "this" {
@@ -20,4 +27,22 @@ resource "aws_lambda_function" "this" {
   handler       = "handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
   filename      = "${path.module}/lambda.zip"
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
+}
+
+resource "aws_s3_bucket" "assets" {
+  bucket = var.assets_bucket_name
+
+  tags = merge(
+    var.tags,
+    {
+      Project = "Bedrock"
+    }
+  )
 }

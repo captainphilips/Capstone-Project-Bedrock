@@ -65,7 +65,7 @@ module "serverless" {
   source = "../../modules/serverless"
 
   function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-assets-alt-soe-025-0347"
+  assets_bucket_name = "bedrock-asset-ALT/SOE/025/0347"
   tags               = local.tags
 }
 

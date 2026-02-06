@@ -17,15 +17,15 @@ jobs:
         environment: [dev, staging, prod]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
@@ -36,7 +36,7 @@ jobs:
       - name: Validate
         working-directory: infra/envs/${{ matrix.environment }}
         run: |
-          terraform init
+          terraform init -input=false
           terraform validate
 
       - name: TFLint
@@ -49,8 +49,8 @@ jobs:
       - name: Plan
         working-directory: infra/envs/${{ matrix.environment }}
         run: |
-          terraform init
-          terraform plan -out=tfplan
+          terraform init -input=false
+          terraform plan -input=false -out=tfplan
           terraform show -json tfplan > plan.json
 
       - name: Upload plan artifact

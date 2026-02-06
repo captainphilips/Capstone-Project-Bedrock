@@ -17,6 +17,8 @@ jobs:
     strategy:
       matrix:
         environment: [dev, staging, prod]
+    environment:
+      name: ${{ matrix.environment == 'prod' && 'production' || matrix.environment }}
 
     steps:
       - uses: actions/checkout@v4
@@ -35,66 +37,5 @@ jobs:
       - name: Apply
         working-directory: infra/envs/${{ matrix.environment }}
         run: |
-          terraform init
-          terraform apply -auto-approve
-name: Terraform Apply
-
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'infra/**'
-      - '.github/workflows/terraform-apply.yml'
-
-jobs:
-  apply:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-    strategy:
-      matrix:
-        environment: [dev, staging, prod]
-    environment:
-      name: ${{ matrix.environment == 'prod' && 'production' || matrix.environment }}
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v2
-        with:
-          terraform_version: 1.5.0
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-          aws-region: us-east-1
-
-      - name: Apply
-        run: |
-          cd infra/envs/${{ matrix.environment }}
-          terraform init
-          terraform plan -out=tfplan
-          terraform apply -input=false tfplan
-
-      - name: Export outputs
-        run: |
-          cd infra/envs/${{ matrix.environment }}
-          terraform output -json > ../../../grading.json
-
-      - name: Upload grading.json
-        uses: actions/upload-artifact@v3
-        with:
-          name: grading-output
-          path: grading.json
-
-      - name: Commit grading.json
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add grading.json || true
-          git commit -m "chore: update grading.json from terraform apply" || true
-          git push origin main || true
+          terraform init -input=false
+          terraform apply -auto-approve -input=false

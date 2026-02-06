@@ -1,23 +1,30 @@
 name: Terraform (dev)
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "infra/**"
+  workflow_dispatch:
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     defaults:
       run:
         working-directory: infra/envs/dev
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.0
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-1
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
       - name: Terraform Validate
         run: terraform validate
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform plan -input=false

@@ -37,6 +37,22 @@ resource "aws_iam_user_policy_attachment" "bedrock_dev_view_ro" {
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
+resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
+  name = "bedrock-dev-view-eks-describe"
+  user = aws_iam_user.bedrock_dev_view.name
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["eks:DescribeCluster"]
+        Resource = "arn:aws:eks:*:*:cluster/project-bedrock-cluster"
+      }
+    ]
+  })
+}
+
 resource "aws_iam_access_key" "bedrock_dev_view" {
   user = aws_iam_user.bedrock_dev_view.name
 }

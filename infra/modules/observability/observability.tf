@@ -26,7 +26,7 @@ resource "aws_iam_role" "cloudwatch_agent" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -52,7 +52,7 @@ resource "aws_eks_addon" "cloudwatch" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }

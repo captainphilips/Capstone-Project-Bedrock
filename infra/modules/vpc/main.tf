@@ -9,7 +9,7 @@ resource "aws_vpc" "this" {
     var.tags,
     {
       Name    = "project-bedrock-vpc"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -21,7 +21,7 @@ resource "aws_internet_gateway" "this" {
     var.tags,
     {
       Name    = "project-bedrock-igw"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -37,7 +37,7 @@ resource "aws_subnet" "public" {
     var.tags,
     {
       Name    = "project-bedrock-public-${count.index + 1}"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -52,7 +52,7 @@ resource "aws_subnet" "private" {
     var.tags,
     {
       Name    = "project-bedrock-private-${count.index + 1}"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -64,7 +64,7 @@ resource "aws_eip" "nat" {
     var.tags,
     {
       Name    = "project-bedrock-nat-eip"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -77,7 +77,7 @@ resource "aws_nat_gateway" "this" {
     var.tags,
     {
       Name    = "project-bedrock-nat"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -94,7 +94,7 @@ resource "aws_route_table" "public" {
     var.tags,
     {
       Name    = "project-bedrock-public-rt"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -117,7 +117,7 @@ resource "aws_route_table" "private" {
     var.tags,
     {
       Name    = "project-bedrock-private-rt"
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }

@@ -19,7 +19,7 @@ locals {
   cluster_name = "project-bedrock-cluster"
 
   tags = {
-    Project     = "Bedrock"
+    Project     = "barakat-2025-capstone"
     Environment = local.environment
     ManagedBy   = "Terraform"
   }

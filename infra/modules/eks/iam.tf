@@ -22,7 +22,7 @@ resource "aws_iam_role" "eks_cluster" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -60,7 +60,7 @@ resource "aws_iam_role" "eks_nodes" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -110,7 +110,7 @@ resource "aws_iam_role" "ebs_csi_driver" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -135,7 +135,7 @@ resource "aws_iam_openid_connect_provider" "bedrock" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }

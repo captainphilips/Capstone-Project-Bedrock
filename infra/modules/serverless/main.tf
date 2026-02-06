@@ -16,7 +16,7 @@ resource "aws_iam_role" "lambda_role" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -36,7 +36,7 @@ resource "aws_lambda_function" "this" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -47,7 +47,7 @@ resource "aws_s3_bucket" "assets" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }

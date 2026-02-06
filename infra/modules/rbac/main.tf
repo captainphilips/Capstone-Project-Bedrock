@@ -16,7 +16,7 @@ resource "aws_iam_role" "eks_irsa_role" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -27,7 +27,7 @@ resource "aws_iam_user" "bedrock_dev_view" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock"
+      Project = "barakat-2025-capstone"
     }
   )
 }

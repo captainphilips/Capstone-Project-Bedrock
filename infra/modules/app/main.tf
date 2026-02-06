@@ -30,4 +30,6 @@ resource "helm_release" "retail_store" {
   namespace        = var.namespace
   create_namespace = true
   timeout          = 600
+
+  values = [file("${path.module}/values.yaml")]
 }

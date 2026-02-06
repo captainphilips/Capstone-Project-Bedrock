@@ -1,0 +1,17 @@
+mysql:
+  enabled: true
+
+postgresql:
+  enabled: true
+
+redis:
+  enabled: true
+
+rabbitmq:
+  enabled: true
+
+dynamodb:
+  enabled: true
+
+dynamodbLocal:
+  enabled: true

@@ -1,0 +1,36 @@
+mysql:
+  enabled: false
+
+postgresql:
+  enabled: false
+
+redis:
+  enabled: true
+
+rabbitmq:
+  enabled: true
+
+dynamodb:
+  enabled: true
+
+dynamodbLocal:
+  enabled: true
+
+catalog:
+  app:
+    persistence:
+      provider: mysql
+      endpoint: "${catalog_db_endpoint}"
+    secret:
+      username: "${catalog_db_username}"
+      password: "${catalog_db_password}"
+
+orders:
+  app:
+    persistence:
+      provider: postgres
+      endpoint: "${orders_db_endpoint}:${orders_db_port}"
+      database: "${orders_db_name}"
+    secret:
+      username: "${orders_db_username}"
+      password: "${orders_db_password}"

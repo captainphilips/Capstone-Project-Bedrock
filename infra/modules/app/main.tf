@@ -32,11 +32,15 @@ resource "helm_release" "retail_store" {
   timeout          = 600
 
   values = [
-    templatefile("${path.module}/values.yaml", {
+    templatefile("${path.module}/values.tmpl.yaml", {
       catalog_db_endpoint = var.catalog_db_endpoint
-      catalog_db_port     = var.catalog_db_port
+      catalog_db_username = var.catalog_db_username
+      catalog_db_password = var.catalog_db_password
       orders_db_endpoint  = var.orders_db_endpoint
       orders_db_port      = var.orders_db_port
+      orders_db_name      = var.orders_db_name
+      orders_db_username  = var.orders_db_username
+      orders_db_password  = var.orders_db_password
     })
   ]
 }

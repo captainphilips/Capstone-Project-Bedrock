@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Bedrock — Deployment Guide</title>
+  <style>
+    @media print {
+      body { margin: 0; padding: 20px; }
+      .no-print { display: none !important; }
+      pre, code { white-space: pre-wrap; word-wrap: break-word; }
+      a { color: #000; text-decoration: none; }
+    }
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 20px; color: #333; }
+    h1 { color: #1a1a2e; border-bottom: 2px solid #16213e; padding-bottom: 10px; font-size: 1.8em; }
+    h2 { color: #16213e; margin-top: 28px; font-size: 1.4em; }
+    h3 { color: #0f3460; margin-top: 20px; font-size: 1.15em; }
+    table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 0.95em; }
+    th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; }
+    th { background: #f0f4f8; font-weight: 600; }
+    pre, code { background: #f5f5f5; padding: 2px 6px; border-radius: 4px; font-family: 'Consolas', 'Monaco', monospace; font-size: 0.9em; }
+    pre { padding: 14px; overflow-x: auto; border: 1px solid #e0e0e0; }
+    hr { border: none; border-top: 1px solid #ddd; margin: 24px 0; }
+    .print-btn { background: #16213e; color: white; border: none; padding: 12px 24px; font-size: 16px; cursor: pointer; border-radius: 6px; margin-bottom: 20px; }
+    .print-btn:hover { background: #0f3460; }
+  </style>
+</head>
+<body>
+  <button class="print-btn no-print" onclick="window.print()">Save as PDF</button>
+  <p class="no-print" style="color:#666; margin-bottom:24px;">Click the button above, then choose &quot;Save as PDF&quot; or &quot;Microsoft Print to PDF&quot; as the printer.</p>
+
+  <h1>Project Bedrock — Deployment Guide</h1>
+  <hr>
+
+  <h2>Quick Navigation</h2>
+  <table>
+    <tr><th>Section</th><th>Description</th></tr>
+    <tr><td>1. Pipeline Triggers</td><td>How to run CI/CD workflows</td></tr>
+    <tr><td>2. Retail Store URL</td><td>Access the running application</td></tr>
+    <tr><td>3. Grading Credentials</td><td>Access Key and Secret Key for grading</td></tr>
+  </table>
+  <hr>
+
+  <h2>1. How to Trigger the Pipeline</h2>
+  <p>The repository uses GitHub Actions for Terraform plan, apply, and validation. Pipelines are in <code>.github/workflows/</code>.</p>
+  <h3>Pipeline Workflows</h3>
+  <table>
+    <tr><th>Workflow</th><th>Trigger</th><th>Actions</th></tr>
+    <tr><td>Terraform Plan &amp; Validation</td><td>Pull request to infra/**</td><td>terraform fmt, validate, tflint, plan</td></tr>
+    <tr><td>Terraform Apply</td><td>Push to main (infra changes)</td><td>terraform init, terraform apply -auto-approve</td></tr>
+    <tr><td>Terraform (dev/staging/prod)</td><td>Manual (Actions → Run workflow)</td><td>terraform init, validate, plan</td></tr>
+  </table>
+  <h3>Triggering a Full Deployment</h3>
+  <pre># 1. Package Lambda (required before apply)
+bash scripts/package_lambda_handler.sh
+
+# 2. Commit and push to main (triggers Apply)
+git add -A
+git commit -m "Deploy Project Bedrock infrastructure"
+git push origin main</pre>
+  <hr>
+
+  <h2>2. Retail Store Application URL</h2>
+  <h3>How to Obtain the URL</h3>
+  <p>The Retail Store UI is exposed via an ALB. After deployment:</p>
+  <pre># Configure kubectl
+aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+
+# Get the Ingress address
+kubectl get ingress -n retail-app</pre>
+  <p>Use the ADDRESS column (e.g. <code>http://k8s-retail-xxxxx-xxx.us-east-1.elb.amazonaws.com</code>). The ALB may take 5–15 minutes to become available.</p>
+  <hr>
+
+  <h2>3. Grading Credentials (bedrock-dev-view)</h2>
+  <p>The IAM user <strong>bedrock-dev-view</strong> has read-only AWS access plus EKS view and S3 PutObject.</p>
+  <h3>Retrieving Access Key and Secret Key</h3>
+  <p><strong>Option A — Terraform CLI:</strong></p>
+  <pre>cd infra/envs/dev
+terraform output bedrock_dev_view_access_key_id
+terraform output bedrock_dev_view_secret_access_key</pre>
+  <p><strong>Option B — Grading JSON:</strong></p>
+  <pre>make output-dev
+# Outputs written to infra/grading.json</pre>
+  <p><strong>Option C — JSON extract:</strong></p>
+  <pre>cd infra/envs/dev
+terraform output -json | jq -r '{
+  bedrock_dev_view_access_key_id: .bedrock_dev_view_access_key_id.value,
+  bedrock_dev_view_secret_access_key: .bedrock_dev_view_secret_access_key.value
+}'</pre>
+  <table>
+    <tr><th>Field</th><th>Example</th></tr>
+    <tr><td>Access Key ID</td><td>AKIA... (20 chars)</td></tr>
+    <tr><td>Secret Access Key</td><td>wJalr... (40 chars)</td></tr>
+  </table>
+  <hr>
+
+  <h2>Resource Nomenclature</h2>
+  <table>
+    <tr><th>Resource</th><th>Value</th></tr>
+    <tr><td>AWS Region</td><td>us-east-1</td></tr>
+    <tr><td>EKS Cluster</td><td>project-bedrock-cluster</td></tr>
+    <tr><td>VPC Name</td><td>project-bedrock-vpc</td></tr>
+    <tr><td>Namespace</td><td>retail-app</td></tr>
+    <tr><td>IAM User</td><td>bedrock-dev-view</td></tr>
+    <tr><td>S3 Bucket</td><td>bedrock-assets-ALTSOE025-0347</td></tr>
+    <tr><td>Lambda</td><td>bedrock-asset-processor</td></tr>
+  </table>
+  <hr>
+
+  <h2>Prerequisites &amp; Bootstrap</h2>
+  <p>Install Terraform, AWS CLI, kubectl. Configure AWS credentials. Create S3 bucket <code>project-bedrock-0347-tf-state</code> and DynamoDB table <code>project-bedrock-tf-lock</code> for Terraform state.</p>
+  <hr>
+
+  <h2>Step-by-Step Deployment</h2>
+  <ol>
+    <li>Clone repo, package Lambda (<code>bash scripts/package_lambda_handler.sh</code>)</li>
+    <li><code>cd infra/envs/dev && terraform init</code></li>
+    <li><code>terraform plan -out=tfplan</code></li>
+    <li><code>terraform apply tfplan</code></li>
+    <li>Configure kubectl and verify outputs</li>
+  </ol>
+  <hr>
+
+  <h2>Architecture Overview</h2>
+  <pre>us-east-1
+├── project-bedrock-vpc (10.0.0.0/16)
+│   ├── Public Subnets + NAT
+│   └── Private Subnets (EKS)
+│       └── project-bedrock-cluster
+│           └── retail-app namespace
+├── bedrock-assets-ALTSOE025-0347 → bedrock-asset-processor (Lambda)
+└── IAM: bedrock-dev-view</pre>
+</body>
+</html>

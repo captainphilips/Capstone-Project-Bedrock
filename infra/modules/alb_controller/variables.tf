@@ -24,6 +24,12 @@ variable "region" {
   default     = "us-east-1"
 }
 
+variable "namespace" {
+  description = "Namespace for the retail app ingress"
+  type        = string
+  default     = "retail-app"
+}
+
 variable "tags" {
   description = "Tags to apply to IAM resources"
   type        = map(string)

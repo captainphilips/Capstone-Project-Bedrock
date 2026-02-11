@@ -20,7 +20,7 @@ resource "aws_eks_cluster" "bedrock" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 
@@ -52,7 +52,7 @@ resource "aws_eks_node_group" "bedrock" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 
@@ -71,7 +71,7 @@ resource "aws_eks_addon" "coredns" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }
@@ -85,7 +85,7 @@ resource "aws_eks_addon" "kube_proxy" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }
@@ -99,7 +99,7 @@ resource "aws_eks_addon" "vpc_cni" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }
@@ -114,7 +114,7 @@ resource "aws_eks_addon" "ebs_csi" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }

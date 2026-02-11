@@ -19,7 +19,7 @@ locals {
   cluster_name = "project-bedrock-cluster"
 
   tags = {
-    Project     = "barakat-2025-capstone"
+    Project     = "Bedrock-Terraform"
     Environment = local.environment
     ManagedBy   = "Terraform"
   }
@@ -69,7 +69,7 @@ module "rbac" {
 
   cluster_name       = module.eks.cluster_name
   oidc_provider      = module.eks.oidc_provider
-  assets_bucket_name = "bedrock-assets-0347"
+  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
   tags               = local.tags
 }
 
@@ -93,7 +93,8 @@ module "serverless" {
   source = "../../modules/serverless"
 
   function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-assets-0347"
+  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
+  lambda_zip_path    = "${path.root}/../../../lambda/hello/build/handler.zip"
   tags               = local.tags
 }
 

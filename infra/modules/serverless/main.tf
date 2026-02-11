@@ -16,7 +16,7 @@ resource "aws_iam_role" "lambda_role" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }
@@ -31,12 +31,12 @@ resource "aws_lambda_function" "this" {
   runtime       = "python3.10"
   handler       = "handler.lambda_handler"
   role          = aws_iam_role.lambda_role.arn
-  filename      = "${path.module}/lambda.zip"
+  filename      = var.lambda_zip_path
 
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }
@@ -47,7 +47,7 @@ resource "aws_s3_bucket" "assets" {
   tags = merge(
     var.tags,
     {
-      Project = "barakat-2025-capstone"
+      Project = "Bedrock-Terraform"
     }
   )
 }

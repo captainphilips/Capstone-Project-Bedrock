@@ -19,7 +19,7 @@ locals {
   cluster_name = "project-bedrock-cluster"
 
   tags = {
-    Project     = "barakat-2025-capstone"
+    Project     = "Bedrock-Terraform"
     Environment = local.environment
     ManagedBy   = "Terraform"
   }
@@ -82,7 +82,7 @@ module "rbac" {
 
   cluster_name       = module.eks.cluster_name
   oidc_provider      = module.eks.oidc_provider
-  assets_bucket_name = "bedrock-assets-0347"
+  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
   tags               = local.tags
 }
 
@@ -93,7 +93,8 @@ module "serverless" {
   source = "../../modules/serverless"
 
   function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-assets-0347"
+  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
+  lambda_zip_path    = "${path.root}/../../../lambda/hello/build/handler.zip"
   tags               = local.tags
 }
 
@@ -132,12 +133,17 @@ module "alb_controller" {
 module "app" {
   source = "../../modules/app"
 
-  cluster_name        = module.eks.cluster_name
-  namespace           = "retail-app"
-  catalog_db_endpoint = module.persistence.mysql_endpoint
-  catalog_db_port     = module.persistence.mysql_port
-  orders_db_endpoint  = module.persistence.postgres_endpoint
-  orders_db_port      = module.persistence.postgres_port
+  cluster_name         = module.eks.cluster_name
+  namespace            = "retail-app"
+  catalog_db_endpoint   = module.persistence.mysql_endpoint
+  catalog_db_port      = module.persistence.mysql_port
+  catalog_db_username  = module.persistence.catalog_db_username
+  catalog_db_password  = module.persistence.catalog_db_password
+  orders_db_endpoint   = module.persistence.postgres_endpoint
+  orders_db_port       = module.persistence.postgres_port
+  orders_db_name       = module.persistence.orders_db_name
+  orders_db_username   = module.persistence.orders_db_username
+  orders_db_password   = module.persistence.orders_db_password
 }
 
 ############################

@@ -13,9 +13,20 @@ variable "oidc_provider_url" {
   type        = string
 }
 
-variable "secret_arns" {
-  description = "Secrets Manager ARNs for external secrets access"
-  type        = list(string)
+variable "mysql_secret_arn" {
+  description = "Secrets Manager ARN for catalog DB"
+  type        = string
+}
+
+variable "postgres_secret_arn" {
+  description = "Secrets Manager ARN for orders DB"
+  type        = string
+}
+
+variable "namespace" {
+  description = "Namespace for retail app secrets"
+  type        = string
+  default     = "retail-app"
 }
 
 variable "region" {

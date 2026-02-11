@@ -49,3 +49,28 @@ output "orders_db_password" {
 output "orders_db_secret_arn" {
   value = aws_secretsmanager_secret.orders.arn
 }
+
+# Aliases for external_secrets and dev root compatibility
+output "mysql_endpoint" {
+  value = aws_db_instance.catalog.address
+}
+
+output "mysql_port" {
+  value = aws_db_instance.catalog.port
+}
+
+output "mysql_secret_arn" {
+  value = aws_secretsmanager_secret.catalog.arn
+}
+
+output "postgres_endpoint" {
+  value = aws_db_instance.orders.address
+}
+
+output "postgres_port" {
+  value = aws_db_instance.orders.port
+}
+
+output "postgres_secret_arn" {
+  value = aws_secretsmanager_secret.orders.arn
+}

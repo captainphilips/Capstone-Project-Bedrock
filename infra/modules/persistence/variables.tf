@@ -1,5 +1,16 @@
+variable "environment" {
+  description = "Environment name for resource naming"
+  type        = string
+  default     = "dev"
+}
+
 variable "vpc_id" {
   description = "VPC ID for database networking"
+  type        = string
+}
+
+variable "vpc_cidr" {
+  description = "VPC CIDR for database access"
   type        = string
 }
 

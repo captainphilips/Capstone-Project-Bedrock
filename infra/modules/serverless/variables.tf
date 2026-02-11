@@ -9,7 +9,11 @@ variable "function_name" {
 variable "assets_bucket_name" {
   description = "S3 bucket for assets"
   type        = string
-  default     = "bedrock-assets-0347"
+}
+
+variable "lambda_zip_path" {
+  description = "Path to Lambda deployment package (zip file)"
+  type        = string
 }
 
 variable "tags" {

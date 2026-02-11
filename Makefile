@@ -30,6 +30,7 @@ help:
 	@echo "  destroy-staging  Destroy staging infrastructure"
 	@echo "  destroy-prod     Destroy prod infrastructure"
 	@echo "  package-lambda   Package Lambda function"
+	@echo "  deploy-full     One-command full stack deployment (requires bash)"
 	@echo "  bootstrap-argocd Bootstrap Argo CD for GitOps"
 	@echo "  clean            Clean Terraform cache and build artifacts"
 
@@ -124,6 +125,9 @@ package-lambda:
 
 bootstrap-argocd:
 	@bash scripts/bootstrap_argocd.sh
+
+deploy-full:
+	@bash scripts/deploy_full_stack.sh
 
 clean:
 	@echo "Cleaning Terraform cache and build artifacts..."

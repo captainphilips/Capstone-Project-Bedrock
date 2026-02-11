@@ -71,14 +71,20 @@ This platform will serve as the backbone of InnovateMart’s cloud strategy, set
 
 ## Repository Structure
 
-- **`infra/`** - Terraform infrastructure code
-  - **`modules/`** - Reusable Terraform modules (VPC, EKS, RBAC, observability, serverless)
-  - **`envs/`** - Per-environment roots (dev, staging, prod)
-- **`lambda/hello/`** - Lambda function source code and build artifacts
-- **`gitops/`** - GitOps manifests and environment overlays
-- **`policies/`** - IAM and RBAC policy definitions
-- **`scripts/`** - Helper scripts for deployment and management
-- **`.github/workflows/`** - CI/CD automation
+```
+Capstone-Project-Bedrock/
+├── .github/workflows/     # CI/CD (Terraform plan, apply)
+├── docs/                  # Deployment guide, success criteria
+├── gitops/                # Argo CD applications, Kustomize base/overlays
+├── infra/                 # Terraform IaC
+│   ├── envs/              # dev, staging, prod root modules
+│   └── modules/           # VPC, EKS, persistence, serverless, app, etc.
+├── lambda/hello/          # bedrock-asset-processor Lambda source
+├── policies/              # IAM policy definitions (reference)
+├── scripts/               # Deployment, verification, helpers
+├── Makefile               # make plan-dev, apply-dev, output-dev
+└── README.md
+```
 
 ## Quick Start
 
@@ -91,13 +97,12 @@ This platform will serve as the backbone of InnovateMart’s cloud strategy, set
 ### Deploy Dev Environment
 
 ```bash
-# Plan infrastructure
+# One-command full deployment (recommended)
+make deploy-full
+
+# Or step by step:
 make plan-dev
-
-# Apply infrastructure
 make apply-dev
-
-# View outputs
 make output-dev
 ```
 

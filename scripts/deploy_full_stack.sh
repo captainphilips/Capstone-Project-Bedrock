@@ -21,32 +21,7 @@ echo "  OK: AWS credentials valid"
 # 2. Bootstrap S3 + DynamoDB
 echo ""
 echo "[2/6] Bootstrap Terraform state backend..."
-BUCKET="project-bedrock-0347-tf-state"
-TABLE="project-bedrock-tf-lock"
-REGION="us-east-1"
-
-if ! aws s3api head-bucket --bucket "$BUCKET" --region "$REGION" 2>/dev/null; then
-    echo "  Creating S3 bucket..."
-    aws s3api create-bucket --bucket "$BUCKET" --region "$REGION"
-    aws s3api put-bucket-versioning --bucket "$BUCKET" --versioning-configuration Status=Enabled
-    echo "  S3 bucket created"
-else
-    echo "  S3 bucket exists"
-fi
-
-if ! aws dynamodb describe-table --table-name "$TABLE" --region "$REGION" 2>/dev/null; then
-    echo "  Creating DynamoDB table..."
-    aws dynamodb create-table --table-name "$TABLE" \
-        --attribute-definitions AttributeName=LockID,AttributeType=S \
-        --key-schema AttributeName=LockID,KeyType=HASH \
-        --billing-mode PAY_PER_REQUEST \
-        --region "$REGION"
-    echo "  Waiting for DynamoDB table..."
-    sleep 10
-    echo "  DynamoDB table ready"
-else
-    echo "  DynamoDB table exists"
-fi
+bash scripts/bootstrap_terraform_state.sh
 
 # 3. Package Lambda
 echo ""

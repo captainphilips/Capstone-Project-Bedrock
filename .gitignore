@@ -11,6 +11,7 @@ tfplan
 .env
 .env.local
 *.tfvars.local
+terraform.tfvars
 
 # IDE
 .idea/

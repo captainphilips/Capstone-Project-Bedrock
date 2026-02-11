@@ -36,3 +36,9 @@ variable "postgres_instance_class" {
   type        = string
   default     = "db.t3.micro"
 }
+
+variable "multi_az" {
+  description = "Enable Multi-AZ for RDS (resilience)"
+  type        = bool
+  default     = false
+}

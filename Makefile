@@ -32,6 +32,7 @@ help:
 	@echo "  package-lambda   Package Lambda function"
 	@echo "  deploy-full     One-command full stack deployment (requires bash)"
 	@echo "  bootstrap-argocd Bootstrap Argo CD for GitOps"
+	@echo "  bootstrap-state  Create S3 + DynamoDB for Terraform state (run once)"
 	@echo "  clean            Clean Terraform cache and build artifacts"
 
 fmt:
@@ -125,6 +126,9 @@ package-lambda:
 
 bootstrap-argocd:
 	@bash scripts/bootstrap_argocd.sh
+
+bootstrap-state:
+	@bash scripts/bootstrap_terraform_state.sh
 
 deploy-full:
 	@bash scripts/deploy_full_stack.sh

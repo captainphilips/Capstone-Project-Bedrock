@@ -44,6 +44,7 @@ kubectl get ingress -n retail-app
 ### Implementation
 - **EKS control plane logs**: `api`, `audit`, `authenticator`, `controllerManager`, `scheduler`
 - **CloudWatch Observability addon**: `amazon-cloudwatch-observability` in `infra/modules/observability/`
+- **See**: [docs/LOGS_AND_METRICS.md](LOGS_AND_METRICS.md)
 
 ### Verification
 ```bash
@@ -60,9 +61,9 @@ aws logs describe-log-groups --log-group-name-prefix /aws/eks/project-bedrock-cl
 ## 4. The cluster is secured, documented, and ready for developer onboarding
 
 ### Implementation
-- **Security**: Private subnets for EKS, IAM IRSA, RBAC
+- **Security**: Private subnets, IAM IRSA, RBAC. See [docs/SECURITY.md](SECURITY.md)
 - **Developer access**: IAM user `bedrock-dev-view` with EKS view + S3 PutObject
-- **Documentation**: `docs/DEPLOYMENT_GUIDE.md`, `README.md`
+- **Documentation**: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md), [DEVELOPER_ONBOARDING.md](DEVELOPER_ONBOARDING.md)
 
 ### Verification
 ```bash
@@ -78,8 +79,9 @@ terraform output bedrock_dev_view_secret_access_key
 
 ### Implementation
 - **EKS node group**: `min_size=2`, `max_size=3`, multi-AZ subnets
-- **RDS**: Multi-AZ capable, encrypted
+- **RDS**: Multi-AZ for staging/prod (`multi_az=true`), encrypted
 - **Modular Terraform**: Reusable modules for staging/prod
+- **Verify**: `bash scripts/verify_resilience.sh`
 
 ### Verification
 ```bash

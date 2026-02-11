@@ -6,10 +6,11 @@ Helper scripts for deployment, verification, and operations.
 
 | Script | Description |
 |--------|-------------|
+| `bootstrap_terraform_state.sh` | Create S3 + DynamoDB for Terraform state (run once) |
 | `deploy_full_stack.sh` | **One-command deploy** (Linux/WSL): bootstrap, Lambda, terraform apply |
 | `deploy_full_stack.ps1` | Same for Windows PowerShell |
 | `package_lambda_handler.sh` | Package Lambda → `lambda/hello/build/handler.zip` |
-| `package_lambda.sh` | Package Lambda with optional requirements.txt |
+| `package_lambda.sh` | Package Lambda (delegates to package_lambda_handler.sh) |
 
 ## Terraform
 
@@ -31,6 +32,8 @@ Helper scripts for deployment, verification, and operations.
 | Script | Description |
 |--------|-------------|
 | `verify_deployment.sh` | Check retail-app pods, port-forward to UI |
-| `verify_logs.sh` | Verify logging setup |
+| `verify_logs.sh` | Verify CloudWatch log groups and streams |
+| `verify_metrics.sh` | Verify Container Insights and metrics |
+| `verify_resilience.sh` | Check nodes, AZs, pod distribution |
 | `test_dev_access.sh` | Test bedrock-dev-view access |
 | `helm_setup.sh` | Manual Helm chart setup (fallback) |

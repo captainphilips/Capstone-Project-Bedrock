@@ -12,9 +12,26 @@ AWS Lambda functions for Project Bedrock.
 ### Build
 
 ```bash
-# From repo root
+# From repo root (recommended)
+cd ~/Capstone-Project-Bedrock
+python3 scripts/package_lambda_handler.py
+# or
 bash scripts/package_lambda_handler.sh
-# Output: lambda/hello/build/handler.zip
+
+# From any subdirectory (e.g. infra/envs/dev)
+bash ../../package_lambda.sh
+# or
+python3 ../../scripts/package_lambda_handler.py
 ```
 
-The zip is referenced by Terraform (`infra/modules/serverless`). Ensure it exists before `terraform apply`.
+Output: `lambda/hello/build/handler.zip` — referenced by Terraform. Ensure it exists before `terraform apply`.
+
+### Test
+
+```bash
+# After deployment - upload to S3 to trigger Lambda
+bash scripts/test_lambda.sh
+
+# View logs
+aws logs tail /aws/lambda/bedrock-asset-processor --region us-east-1 --follow
+```

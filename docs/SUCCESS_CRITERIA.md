@@ -96,7 +96,10 @@ kubectl get nodes -o wide
 
 | Blocker | Fix |
 |---------|-----|
-| **Lambda apply fails** | Ensure `lambda/hello/build/handler.zip` exists (run `bash scripts/package_lambda_handler.sh` or let CI build it) |
+| **Lambda apply fails** | Ensure `lambda/hello/build/handler.zip` exists (run `python3 scripts/package_lambda_handler.py` or `bash scripts/package_lambda_handler.sh`) |
+| **EKS: unsupported Kubernetes version 1.27** | Use 1.29, 1.31, 1.32, 1.33, or 1.34. Set `cluster_version = "1.29"` in terraform.tfvars |
+| **IAM: bedrock-dev-view already exists** | Set `use_existing_bedrock_dev_view_user = true` in terraform.tfvars |
 | **Partial apply (only VPC)** | Run `terraform apply -auto-approve` again; check for errors in EKS, RDS, or serverless |
 | **No outputs** | Outputs appear only after full apply. Re-run apply to completion. |
-| **Observability addon fails** | Check addon compatibility: `aws eks describe-addon-versions --addon-name amazon-cloudwatch-observability --kubernetes-version 1.34` |
+| **Observability addon fails** | Check addon compatibility: `aws eks describe-addon-versions --addon-name amazon-cloudwatch-observability --kubernetes-version 1.29` |
+| **S3 event not triggering Lambda** | Verify `aws_s3_bucket_notification` and `aws_lambda_permission` in serverless module; test with `bash scripts/test_lambda.sh` |

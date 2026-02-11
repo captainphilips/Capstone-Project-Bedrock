@@ -5,41 +5,23 @@ terraform {
       version = "~> 5.0"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 3.0"
+      source                = "hashicorp/kubernetes"
+      version               = "~> 3.0"
+      configuration_aliases = [kubernetes]
     }
     helm = {
-      source  = "hashicorp/helm"
-      version = "~> 3.0"
+      source                = "hashicorp/helm"
+      version               = "~> 3.0"
+      configuration_aliases = [helm]
     }
   }
 }
 
-data "aws_eks_cluster" "this" {
-  name = var.cluster_name
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.cluster_name
-}
+# Uses kubernetes/helm providers passed from root
 
 locals {
   namespace       = "kube-system"
   service_account = "aws-load-balancer-controller"
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "helm" {
-  kubernetes = {
-    host                   = data.aws_eks_cluster.this.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.this.token
-  }
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -79,7 +61,7 @@ resource "aws_iam_role" "alb_controller" {
 }
 
 resource "aws_iam_policy" "alb_controller" {
-  name   = "project-bedrock-alb-controller-policy"
+  name = "project-bedrock-alb-controller-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -177,7 +159,7 @@ resource "aws_iam_policy" "alb_controller" {
         Resource = "arn:aws:ec2:*:*:security-group/*"
         Condition = {
           Null = {
-            "aws:RequestTag/elbv2.k8s.aws/cluster" = "true"
+            "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
             "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
           }
         }
@@ -218,7 +200,7 @@ resource "aws_iam_policy" "alb_controller" {
         ]
         Condition = {
           Null = {
-            "aws:RequestTag/elbv2.k8s.aws/cluster" = "true"
+            "aws:RequestTag/elbv2.k8s.aws/cluster"  = "true"
             "aws:ResourceTag/elbv2.k8s.aws/cluster" = "false"
           }
         }
@@ -315,11 +297,12 @@ resource "kubernetes_ingress_v1" "retail_ui" {
   metadata {
     name      = "retail-store-ui"
     namespace = var.namespace
+    # Application Load Balancer (ALB) - ingress.class alb provisions ALB automatically
     annotations = {
-      "kubernetes.io/ingress.class"              = "alb"
-      "alb.ingress.kubernetes.io/scheme"         = "internet-facing"
-      "alb.ingress.kubernetes.io/target-type"    = "ip"
-      "alb.ingress.kubernetes.io/listen-ports"   = "[{\"HTTP\":80}]"
+      "kubernetes.io/ingress.class"                = "alb"
+      "alb.ingress.kubernetes.io/scheme"           = "internet-facing"
+      "alb.ingress.kubernetes.io/target-type"      = "ip"
+      "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTP\":80}]"
       "alb.ingress.kubernetes.io/healthcheck-path" = "/"
     }
   }

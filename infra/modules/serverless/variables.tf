@@ -16,6 +16,18 @@ variable "lambda_zip_path" {
   type        = string
 }
 
+variable "vpc_id" {
+  description = "VPC ID for tagging and association (project-bedrock-vpc)"
+  type        = string
+  default     = null
+}
+
+variable "lambda_log_retention_days" {
+  description = "CloudWatch log retention for Lambda (days)"
+  type        = number
+  default     = 14
+}
+
 variable "tags" {
   description = "Tags to apply to serverless resources"
   type        = map(string)

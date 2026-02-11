@@ -8,7 +8,7 @@ resource "aws_vpc" "this" {
   tags = merge(
     var.tags,
     {
-      Name = "project-bedrock-vpc"
+      Name    = "project-bedrock-vpc"
       Project = "Bedrock-Terraform"
     }
   )

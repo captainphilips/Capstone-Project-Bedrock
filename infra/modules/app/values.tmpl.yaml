@@ -10,11 +10,13 @@ redis:
 rabbitmq:
   enabled: true
 
+# Use AWS DynamoDB (external) - NOT in-memory dynamodbLocal
 dynamodb:
   enabled: true
 
+# Disable in-memory DynamoDB Local - use external RDS/DynamoDB for persistence
 dynamodbLocal:
-  enabled: true
+  enabled: false
 
 catalog:
   app:

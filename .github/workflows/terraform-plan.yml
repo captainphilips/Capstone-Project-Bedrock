@@ -22,8 +22,8 @@ jobs:
 
       - name: Package Lambda (required for plan)
         run: |
-          mkdir -p lambda/hello/build
-          cd lambda/hello && zip -j build/handler.zip handler.py && cd ../..
+          python3 scripts/package_lambda_handler.py
+          ls -la lambda/hello/build/handler.zip
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3

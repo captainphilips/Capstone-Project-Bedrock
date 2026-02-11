@@ -12,5 +12,5 @@ output "bedrock_dev_view_secret_access_key" {
 
 output "bedrock_dev_view_arn" {
   description = "IAM user ARN for bedrock-dev-view"
-  value       = aws_iam_user.bedrock_dev_view.arn
+  value       = local.bedrock_dev_view_user_arn
 }

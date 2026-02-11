@@ -87,7 +87,7 @@ resource "aws_db_instance" "catalog" {
   apply_immediately       = true
   skip_final_snapshot     = true
   deletion_protection     = false
-  multi_az               = var.multi_az
+  multi_az                = var.multi_az
 
   tags = merge(
     var.tags,
@@ -113,7 +113,7 @@ resource "aws_db_instance" "orders" {
   apply_immediately       = true
   skip_final_snapshot     = true
   deletion_protection     = false
-  multi_az               = var.multi_az
+  multi_az                = var.multi_az
 
   tags = merge(
     var.tags,

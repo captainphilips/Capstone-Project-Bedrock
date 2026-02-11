@@ -21,8 +21,14 @@ resource "aws_iam_role" "eks_irsa_role" {
   )
 }
 
+data "aws_iam_user" "bedrock_dev_view" {
+  count     = var.use_existing_bedrock_dev_view_user ? 1 : 0
+  user_name = "bedrock-dev-view"
+}
+
 resource "aws_iam_user" "bedrock_dev_view" {
-  name = "bedrock-dev-view"
+  count = var.use_existing_bedrock_dev_view_user ? 0 : 1
+  name  = "bedrock-dev-view"
 
   tags = merge(
     var.tags,
@@ -32,14 +38,19 @@ resource "aws_iam_user" "bedrock_dev_view" {
   )
 }
 
+locals {
+  bedrock_dev_view_user_name = var.use_existing_bedrock_dev_view_user ? data.aws_iam_user.bedrock_dev_view[0].user_name : aws_iam_user.bedrock_dev_view[0].name
+  bedrock_dev_view_user_arn  = var.use_existing_bedrock_dev_view_user ? data.aws_iam_user.bedrock_dev_view[0].arn : aws_iam_user.bedrock_dev_view[0].arn
+}
+
 resource "aws_iam_user_policy_attachment" "bedrock_dev_view_ro" {
-  user       = aws_iam_user.bedrock_dev_view.name
+  user       = local.bedrock_dev_view_user_name
   policy_arn = "arn:aws:iam::aws:policy/ReadOnlyAccess"
 }
 
 resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
   name = "bedrock-dev-view-eks-describe"
-  user = aws_iam_user.bedrock_dev_view.name
+  user = local.bedrock_dev_view_user_name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -55,7 +66,7 @@ resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
 
 resource "aws_iam_user_policy" "bedrock_dev_view_bucket_put" {
   name = "bedrock-dev-view-bucket-put"
-  user = aws_iam_user.bedrock_dev_view.name
+  user = local.bedrock_dev_view_user_name
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -73,19 +84,19 @@ resource "aws_iam_user_policy" "bedrock_dev_view_bucket_put" {
 }
 
 resource "aws_iam_access_key" "bedrock_dev_view" {
-  user = aws_iam_user.bedrock_dev_view.name
+  user = local.bedrock_dev_view_user_name
 }
 
 resource "aws_eks_access_entry" "bedrock_dev_view" {
   cluster_name  = var.cluster_name
-  principal_arn = aws_iam_user.bedrock_dev_view.arn
+  principal_arn = local.bedrock_dev_view_user_arn
   type          = "STANDARD"
 }
 
 resource "aws_eks_access_policy_association" "bedrock_dev_view" {
   cluster_name  = var.cluster_name
   policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSViewPolicy"
-  principal_arn = aws_iam_user.bedrock_dev_view.arn
+  principal_arn = local.bedrock_dev_view_user_arn
 
   access_scope {
     type = "cluster"

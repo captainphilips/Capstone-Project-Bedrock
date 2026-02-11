@@ -1,25 +1,20 @@
 ################################################################################
 # Retail Store Sample App (Helm)
 ################################################################################
-data "aws_eks_cluster" "this" {
-  name = var.cluster_name
-}
+# Uses kubernetes/helm providers passed from root
 
-data "aws_eks_cluster_auth" "this" {
-  name = var.cluster_name
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "helm" {
-  kubernetes = {
-    host                   = data.aws_eks_cluster.this.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.this.token
+terraform {
+  required_providers {
+    kubernetes = {
+      source                = "hashicorp/kubernetes"
+      version               = "~> 3.0"
+      configuration_aliases = [kubernetes]
+    }
+    helm = {
+      source                = "hashicorp/helm"
+      version               = "~> 3.0"
+      configuration_aliases = [helm]
+    }
   }
 }
 

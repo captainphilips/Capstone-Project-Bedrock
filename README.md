@@ -2,137 +2,219 @@
 
 A Production-Grade Microservices Platform on AWS EKS
 
+## Table of Contents
+
+- [Introduction](#1-introduction--company-background)
+- [Architecture](#2-architecture)
+- [Components](#3-components)
+- [Quick Start](#4-quick-start)
+- [Application URL](#5-application-url)
+- [EKS Cluster Access](#6-eks-cluster-access)
+- [Logging & Observability](#7-logging--observability)
+- [CI/CD Pipeline](#8-cicd-pipeline)
+- [Troubleshooting](#9-troubleshooting)
+- [Contributing](#10-contributing)
+
+---
+
 ## 1. Introduction & Company Background
 
-InnovateMart is a rapidly growing e-commerce startup focused on redefining the online retail experience. After a successful Series A funding round, the company is expanding its platform to support global customers, increased transaction volumes, and accelerated feature delivery.
+InnovateMart is a rapidly growing e-commerce startup focused on redefining the online retail experience. The engineering team has transformed a legacy monolithic application into a cloud-native microservices architecture on **Amazon EKS**.
 
-To meet these demands, the engineering team has transformed a legacy monolithic application into a cloud-native microservices architecture. This approach enables independent service deployment, horizontal scalability, improved fault isolation, and faster development cycles.
+**Key objectives:** Secure multi-AZ EKS cluster, automated IaC, Retail Store Application deployment, centralized logging/metrics, event-driven Lambda integration, and developer-ready access controls.
 
-As InnovateMart moves to production, the next step is to establish a robust, secure, and scalable Kubernetes foundation to support mission-critical workloads.
+---
 
-## 2. Project Context: From Monolith to Microservices
+## 2. Architecture
 
-The new Retail Store Application consists of loosely coupled services, such as product catalog, cart, checkout, and order management. These services communicate through APIs and asynchronous events, making container orchestration and service discovery essential.
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                           AWS Cloud                                       │
+│  ┌──────────────────────────────────────────────────────────────────┐  │
+│  │  VPC (project-bedrock-vpc)                                         │  │
+│  │  ┌─────────────┐  ┌─────────────────┐  ┌──────────────────────┐   │  │
+│  │  │ EKS Cluster │  │ RDS (MySQL +    │  │ S3 + Lambda         │   │  │
+│  │  │ project-    │  │ PostgreSQL)     │  │ bedrock-asset-       │   │  │
+│  │  │ bedrock-    │  │ External DB      │  │ processor + events   │   │  │
+│  │  │ cluster     │  │ (catalog, orders)│  │                      │   │  │
+│  │  │             │  └─────────────────┘  └──────────────────────┘   │  │
+│  │  │ ┌─────────┐ │                                                    │  │
+│  │  │ │ retail- │ │  ALB (Application Load Balancer)                    │  │
+│  │  │ │ app ns  │◄├────────────────────────────────────────────────────┤  │
+│  │  │ │         │ │  Internet-facing, HTTP:80                           │  │
+│  │  │ └─────────┘ │                                                    │  │
+│  │  └──────────────────────────────────────────────────────────────────┘  │
+│  └─────────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-To ensure production readiness, the platform must:
+- **Data storage:** RDS (MySQL for catalog, PostgreSQL for orders) — external, persistent. DynamoDB for cart — AWS service. No in-memory-only storage.
+- **Load balancer:** AWS Application Load Balancer (ALB) via `aws-load-balancer-controller` + Ingress.
+- **Event-driven:** S3 → Lambda (s3:ObjectCreated) for asset processing.
 
-- Run on managed, highly available infrastructure
-- Enforce strong security boundaries and access controls
-- Provide observability across services and infrastructure
-- Support automation and repeatable deployments
+---
 
-Amazon Elastic Kubernetes Service (EKS) was selected as the core orchestration platform for its scalability, security integrations, and strong alignment with AWS-native services.
+## 3. Components
 
-## 3. Mission: Project Bedrock
+| Component | Description |
+|-----------|-------------|
+| **EKS Cluster** | `project-bedrock-cluster` — Kubernetes 1.29+ |
+| **Application Namespace** | `retail-app` — Retail Store Sample App |
+| **RDS** | MySQL (catalog), PostgreSQL (orders) — used by all app services |
+| **ALB** | Application Load Balancer — Ingress for retail-store-ui |
+| **Lambda** | `bedrock-asset-processor` — S3-triggered, CloudWatch logging |
+| **S3** | `bedrock-assets-*` — Event notification to Lambda |
+| **IAM User** | `bedrock-dev-view` — EKS read + S3 upload |
 
-As the Cloud DevOps Engineer, the responsibility is to deliver Project Bedrock, the foundational Kubernetes platform that will support InnovateMart's production workloads.
+---
 
-The mission is to design, provision, and operationalize a production-grade Amazon EKS environment that hosts the AWS Retail Store Sample Application and meets enterprise standards.
+## 4. Quick Start
 
-Key Objectives
+### Prerequisites
 
-Expected to:
+- Terraform >= 1.5.0  
+- AWS CLI (`aws configure`)  
+- kubectl  
+- Python 3 (for Lambda packaging)
 
-- Provision a secure Amazon EKS cluster
-  - Multi-AZ, production-ready architecture
-  - Proper IAM integration and network isolation
-  - Secure node groups and cluster access controls
-- Automate infrastructure delivery
-  - Infrastructure as Code (IaC) using tools such as Terraform or AWS CDK
-  - Repeatable, version-controlled deployments
-  - Environment consistency across stages
-- Deploy the Retail Store Application
-  - Containerized microservices deployed to EKS
-  - Kubernetes best practices (namespaces, services, ingress)
-  - Scalable and resilient service configuration
-- Implement observability
-  - Centralized logging for cluster and application workloads
-  - Metrics and basic monitoring for operational visibility
-  - Readiness for future alerting and SRE practices
-- Extend the platform with event-driven components
-  - Integration with AWS serverless services (e.g., Lambda, EventBridge, SQS/SNS)
-  - Support for asynchronous workflows and decoupled services
-- Prepare the platform for developer hand-off
-  - Secure developer access to the cluster
-  - Clear separation of duties between platform and application teams
-  - A stable foundation for future feature development
+### Deploy
 
-## 4. Definition of Success
+```bash
+# 1. Package Lambda (required before Terraform)
+python3 scripts/package_lambda_handler.py
 
-Project Bedrock is considered successful when:
+# 2. Full deployment (~25–35 min)
+bash scripts/deploy_full_stack.sh
+# or: make deploy-full
 
-- Infrastructure provisioning is fully automated and reproducible
-- The Retail Store Application is running reliably on Amazon EKS
-- Logs and metrics are centralized and accessible
-- The cluster is secured, documented, and ready for developer onboarding
-- The architecture supports scalability, resilience, and future growth
+# 3. Configure kubeconfig
+aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
 
-This platform will serve as the backbone of InnovateMart’s cloud strategy, setting standards for security, reliability, and operational excellence as the company grows globally.
+# 4. Get application URL
+kubectl get ingress -n retail-app
+```
+
+---
+
+## 5. Application URL
+
+After deployment:
+
+```bash
+kubectl get ingress -n retail-app
+```
+
+Use the **ADDRESS** column (e.g. `k8s-retail-xxxx.elb.amazonaws.com`). Open `http://<ADDRESS>` in a browser.
+
+The ALB is internet-facing and routes traffic to `retail-store-ui` (port 80) in the cluster.
+
+---
+
+## 6. EKS Cluster Access
+
+### kubectl
+
+```bash
+aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+kubectl get pods -n retail-app
+```
+
+### Developer IAM User (bedrock-dev-view)
+
+```bash
+# Get credentials from Terraform output
+terraform -chdir=infra/envs/dev output bedrock_dev_view_access_key_id
+terraform -chdir=infra/envs/dev output bedrock_dev_view_secret_access_key
+
+# Configure and verify
+aws configure --profile bedrock-dev-view  # Use the keys above
+aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev-view
+```
+
+---
+
+## 7. Logging & Observability
+
+### Application Logs (in cluster)
+
+- **CloudWatch Observability addon** — collects container logs from `retail-app` namespace.
+- **Log groups:**
+  - `/aws/eks/project-bedrock-cluster/cluster` — Control plane
+  - `/aws/containerinsights/project-bedrock-cluster/application` — Application workloads
+
+### Lambda Logs
+
+- Log group: `/aws/lambda/bedrock-asset-processor`
+- Retention: 14 days
+
+### Viewing Logs
+
+```bash
+# EKS control plane
+aws logs tail /aws/eks/project-bedrock-cluster/cluster --region us-east-1 --follow
+
+# Lambda
+aws logs tail /aws/lambda/bedrock-asset-processor --region us-east-1
+
+# Verification script
+bash scripts/verify_logs.sh
+```
+
+### CloudWatch Console
+
+- **Logs:** CloudWatch → Log groups → filter by `/aws/eks/project-bedrock-cluster`
+- **Metrics:** Container Insights → select `project-bedrock-cluster`
+
+---
+
+## 8. CI/CD Pipeline
+
+| Workflow | Trigger | Action |
+|----------|---------|--------|
+| `terraform-plan.yml` | Pull request | Plan, validate, TFLint |
+| `terraform-apply.yml` | Push to main | Apply dev |
+| `terraform-dev.yml` | Manual | Plan/apply dev |
+
+**Required:** GitHub secret `AWS_ROLE_ARN` (OIDC role for GitHub Actions).
+
+See [.github/workflows/README.md](.github/workflows/README.md) for setup.
+
+---
+
+## 9. Troubleshooting
+
+| Issue | Fix |
+|-------|-----|
+| Lambda zip not found | `python3 scripts/package_lambda_handler.py` |
+| EKS version unsupported | Set `cluster_version = "1.29"` in terraform.tfvars |
+| IAM user already exists | Set `use_existing_bedrock_dev_view_user = true` in terraform.tfvars |
+| No ingress ADDRESS | Wait 2–5 min after pods ready; ALB creation takes time |
+| App logs not visible | Ensure CloudWatch Observability addon is installed |
+
+---
+
+## 10. Contributing
+
+1. Create a feature branch  
+2. Run `make fmt-check` and `make validate`  
+3. Push and open a pull request  
+4. CI runs plan/validation; merge to main to apply  
+
+---
 
 ## Repository Structure
 
 ```
 Capstone-Project-Bedrock/
-├── .github/workflows/     # CI/CD (Terraform plan, apply)
-├── docs/                  # Deployment guide, success criteria
-├── gitops/                # Argo CD applications, Kustomize base/overlays
-├── infra/                 # Terraform IaC
-│   ├── envs/              # dev, staging, prod root modules
-│   └── modules/           # VPC, EKS, persistence, serverless, app, etc.
-├── lambda/hello/          # bedrock-asset-processor Lambda source
-├── policies/              # IAM policy definitions (reference)
-├── scripts/               # Deployment, verification, helpers
-├── Makefile               # make plan-dev, apply-dev, output-dev
-└── README.md
+├── .github/workflows/     # CI/CD
+├── docs/                  # Deployment guide, logs, success criteria
+├── infra/
+│   ├── envs/dev|staging|prod/
+│   └── modules/          # VPC, EKS, persistence, serverless, app, alb_controller, observability
+├── lambda/hello/          # bedrock-asset-processor source
+├── scripts/               # deploy_full_stack, test_lambda, verify_*
+└── Makefile
 ```
-
-## Quick Start
-
-### Prerequisites
-
-- Terraform >= 1.5.0
-- AWS CLI configured with appropriate credentials
-- `make` for running common commands
-
-### Deploy Dev Environment
-
-```bash
-# One-command full deployment (recommended)
-make deploy-full
-
-# Or step by step:
-make plan-dev
-make apply-dev
-make output-dev
-```
-
-## GitOps Bootstrap
-
-Install Argo CD and point it at this repo's GitOps overlays:
-
-```bash
-REPO_URL="https://github.com/captainphilips/Capstone-Project-Bedrock.git"
-TARGET_ENV=dev
-./scripts/bootstrap_argocd.sh
-```
-
-GitOps content lives under `gitops/overlays/{dev,staging,prod}` and manages namespaces and RBAC for each environment.
-
-## State Management
-
-Remote state is stored in S3 with DynamoDB locking:
-
-- Bucket: `project-bedrock-0347-tf-state`
-- Lock table: `project-bedrock-tf-lock`
-
-## Contributing
-
-1. Create a feature branch
-2. Make changes and test locally
-3. Run `make fmt-check` and `make validate`
-4. Push and create a pull request
-5. CI/CD will run plan and validation
-6. After approval, merge to main for apply
 
 ## License
 

@@ -27,7 +27,11 @@ bash scripts/bootstrap_terraform_state.sh
 echo ""
 echo "[3/6] Packaging Lambda function..."
 bash scripts/package_lambda_handler.sh
-echo "  Lambda package ready"
+if [[ ! -f lambda/hello/build/handler.zip ]]; then
+    echo "  ERROR: handler.zip not created. Run: python3 scripts/package_lambda_handler.py"
+    exit 1
+fi
+echo "  Lambda package ready: lambda/hello/build/handler.zip"
 
 # 4. Terraform Init
 echo ""

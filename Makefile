@@ -63,27 +63,27 @@ init-prod:
 	@echo "Initializing prod environment..."
 	@cd infra/envs/prod && $(TF) init
 
-plan-dev: init-dev
+plan-dev: package-lambda init-dev
 	@echo "Planning dev infrastructure..."
 	@cd infra/envs/dev && $(TF) plan -out=tfplan
 
-plan-staging: init-staging
+plan-staging: package-lambda init-staging
 	@echo "Planning staging infrastructure..."
 	@cd infra/envs/staging && $(TF) plan -out=tfplan
 
-plan-prod: init-prod
+plan-prod: package-lambda init-prod
 	@echo "Planning prod infrastructure..."
 	@cd infra/envs/prod && $(TF) plan -out=tfplan
 
-apply-dev: init-dev
+apply-dev: package-lambda init-dev
 	@echo "Applying dev infrastructure..."
 	@cd infra/envs/dev && $(TF) apply -auto-approve -input=false
 
-apply-staging: init-staging
+apply-staging: package-lambda init-staging
 	@echo "Applying staging infrastructure..."
 	@cd infra/envs/staging && $(TF) apply -auto-approve -input=false
 
-apply-prod: init-prod
+apply-prod: package-lambda init-prod
 	@echo "Applying prod infrastructure..."
 	@cd infra/envs/prod && $(TF) apply -auto-approve -input=false
 

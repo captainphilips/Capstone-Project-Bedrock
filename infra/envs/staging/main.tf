@@ -13,6 +13,18 @@ variable "environment" {
   default     = "staging"
 }
 
+variable "cluster_version" {
+  description = "EKS Kubernetes version (1.29, 1.31, 1.32, 1.33, or 1.34)"
+  type        = string
+  default     = "1.29"
+}
+
+variable "use_existing_bedrock_dev_view_user" {
+  description = "Set true if bedrock-dev-view IAM user already exists"
+  type        = bool
+  default     = false
+}
+
 locals {
   region        = var.aws_region
   environment   = var.environment
@@ -46,7 +58,7 @@ module "eks" {
   source = "../../modules/eks"
 
   cluster_name    = local.cluster_name
-  cluster_version = "1.34"
+  cluster_version = var.cluster_version
   vpc_id          = module.vpc.vpc_id
   subnet_ids      = module.vpc.private_subnets
   tags            = local.tags
@@ -72,10 +84,11 @@ module "persistence" {
 module "rbac" {
   source = "../../modules/rbac"
 
-  cluster_name       = module.eks.cluster_name
-  oidc_provider      = module.eks.oidc_provider
-  assets_bucket_name = local.assets_bucket
-  tags               = local.tags
+  cluster_name                       = module.eks.cluster_name
+  oidc_provider                      = module.eks.oidc_provider
+  assets_bucket_name                 = local.assets_bucket
+  use_existing_bedrock_dev_view_user = var.use_existing_bedrock_dev_view_user
+  tags                               = local.tags
 }
 
 ############################
@@ -99,7 +112,7 @@ module "serverless" {
 
   function_name      = local.lambda_name
   assets_bucket_name = local.assets_bucket
-  lambda_zip_path    = "${path.root}/../../../lambda/hello/build/handler.zip"
+  lambda_zip_path    = abspath("${path.module}/../../../lambda/hello/build/handler.zip")
   vpc_id             = module.vpc.vpc_id
   tags               = local.tags
 }

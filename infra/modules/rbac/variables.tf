@@ -21,3 +21,9 @@ variable "assets_bucket_name" {
   description = "Assets bucket name for upload access"
   type        = string
 }
+
+variable "use_existing_bedrock_dev_view_user" {
+  description = "Set to true if bedrock-dev-view IAM user already exists (e.g. from partial apply)"
+  type        = bool
+  default     = false
+}

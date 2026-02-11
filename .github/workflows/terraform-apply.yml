@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'infra/**'
+      - 'lambda/**'
       - '.github/workflows/terraform-apply.yml'
 
 jobs:
@@ -33,6 +34,12 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
+
+      - name: Package Lambda function
+        run: |
+          mkdir -p lambda/hello/build
+          cd lambda/hello && zip -j build/handler.zip handler.py && cd ../..
+          ls -la lambda/hello/build/handler.zip
 
       - name: Apply
         working-directory: infra/envs/${{ matrix.environment }}

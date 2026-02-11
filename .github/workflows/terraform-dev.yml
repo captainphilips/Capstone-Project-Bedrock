@@ -14,6 +14,12 @@ jobs:
         working-directory: infra/envs/dev
     steps:
       - uses: actions/checkout@v4
+
+      - name: Package Lambda
+        run: |
+          mkdir -p lambda/hello/build
+          cd lambda/hello && zip -j build/handler.zip handler.py && cd ../..
+
       - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.0

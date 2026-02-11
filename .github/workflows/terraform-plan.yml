@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'infra/**'
+      - 'lambda/**'
       - '.github/workflows/terraform-plan.yml'
 
 jobs:
@@ -18,6 +19,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Package Lambda (required for plan)
+        run: |
+          mkdir -p lambda/hello/build
+          cd lambda/hello && zip -j build/handler.zip handler.py && cd ../..
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3

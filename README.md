@@ -23,15 +23,15 @@ To ensure production readiness, the platform must:
 
 Amazon Elastic Kubernetes Service (EKS) was selected as the core orchestration platform for its scalability, security integrations, and strong alignment with AWS-native services.
 
-## 3. Your Mission: Project Bedrock
+## 3. Mission: Project Bedrock
 
-As the Cloud DevOps Engineer, you are responsible for delivering Project Bedrock, the foundational Kubernetes platform that will support InnovateMart's production workloads.
+As the Cloud DevOps Engineer, the responsibility is to deliver Project Bedrock, the foundational Kubernetes platform that will support InnovateMart's production workloads.
 
-Your mission is to design, provision, and operationalize a production-grade Amazon EKS environment that hosts the AWS Retail Store Sample Application and meets enterprise standards.
+The mission is to design, provision, and operationalize a production-grade Amazon EKS environment that hosts the AWS Retail Store Sample Application and meets enterprise standards.
 
 Key Objectives
 
-You are expected to:
+Expected to:
 
 - Provision a secure Amazon EKS cluster
   - Multi-AZ, production-ready architecture

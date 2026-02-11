@@ -35,9 +35,8 @@ resource "aws_lambda_function" "this" {
 
   tags = merge(
     var.tags,
-    {
-      Project = "Bedrock-Terraform"
-    }
+    { Name = var.function_name },
+    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "project-bedrock-vpc" } : {}
   )
 }
 
@@ -46,9 +45,8 @@ resource "aws_s3_bucket" "assets" {
 
   tags = merge(
     var.tags,
-    {
-      Project = "Bedrock-Terraform"
-    }
+    { Name = "project-bedrock-assets" },
+    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "project-bedrock-vpc" } : {}
   )
 }
 

@@ -2,19 +2,16 @@
 
 set -e
 
-echo "Packaging Lambda function..."
-echo ""
+# Cross-platform: use Python (built-in zipfile) - no zip utility required
+# Works on Windows, Linux, macOS. Python is guaranteed (Lambda is Python).
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR/.."
 
-# Navigate to the lambda directory
-cd lambda/hello
-
-# Create the zip file
-mkdir -p build
-zip -j build/handler.zip handler.py
-
-echo ""
-echo "✅ Lambda function packaged successfully"
-echo ""
-echo "Output: lambda/hello/build/handler.zip"
-echo ""
-echo "This file is referenced by Terraform as the Lambda deployment package."
+if command -v python3 &>/dev/null; then
+  python3 scripts/package_lambda_handler.py
+elif command -v python &>/dev/null; then
+  python scripts/package_lambda_handler.py
+else
+  echo "Error: Python is required to package the Lambda. Install Python and try again." >&2
+  exit 1
+fi

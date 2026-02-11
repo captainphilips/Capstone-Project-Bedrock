@@ -14,9 +14,13 @@ variable "environment" {
 }
 
 locals {
-  region       = var.aws_region
-  environment  = var.environment
-  cluster_name = "project-bedrock-cluster"
+  region        = var.aws_region
+  environment   = var.environment
+  cluster_name  = "project-bedrock-cluster"
+  vpc_name      = "project-bedrock-vpc"
+  assets_bucket = "bedrock-assets-ALTSOE025-0347"
+  lambda_name   = "bedrock-asset-processor"
+  namespace     = "retail-app"
 
   tags = {
     Project     = "Bedrock-Terraform"
@@ -82,68 +86,88 @@ module "rbac" {
 
   cluster_name       = module.eks.cluster_name
   oidc_provider      = module.eks.oidc_provider
-  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
+  assets_bucket_name = local.assets_bucket
   tags               = local.tags
 }
 
 ############################
-# Serverless Module
+# Serverless Module (Lambda bedrock-asset-processor + S3 bucket, synced with VPC)
 ############################
 module "serverless" {
   source = "../../modules/serverless"
 
-  function_name      = "bedrock-asset-processor"
-  assets_bucket_name = "bedrock-assets-ALTSOE025-0347"
+  function_name      = local.lambda_name
+  assets_bucket_name = local.assets_bucket
   lambda_zip_path    = "${path.root}/../../../lambda/hello/build/handler.zip"
+  vpc_id             = module.vpc.vpc_id
   tags               = local.tags
 }
 
 ############################
-# External Secrets Module
+# External Secrets Module (depends on app for retail-app namespace)
 ############################
 module "external_secrets" {
   source = "../../modules/external_secrets"
 
-  cluster_name       = module.eks.cluster_name
-  oidc_provider_arn  = module.eks.oidc_provider_arn
-  oidc_provider_url  = module.eks.oidc_provider_url
-  region             = local.region
-  namespace          = "retail-app"
-  mysql_secret_arn   = module.persistence.mysql_secret_arn
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  cluster_name        = module.eks.cluster_name
+  oidc_provider_arn   = module.eks.oidc_provider_arn
+  oidc_provider_url   = module.eks.oidc_provider_url
+  region              = local.region
+  namespace           = local.namespace
+  mysql_secret_arn    = module.persistence.mysql_secret_arn
   postgres_secret_arn = module.persistence.postgres_secret_arn
+
+  depends_on = [module.app]
 }
 
 ############################
-# ALB Controller Module
+# ALB Controller Module (depends on app for retail-app namespace & retail-store-ui service)
 ############################
 module "alb_controller" {
   source = "../../modules/alb_controller"
 
-  cluster_name    = module.eks.cluster_name
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  cluster_name      = module.eks.cluster_name
   oidc_provider_arn = module.eks.oidc_provider_arn
   oidc_provider_url = module.eks.oidc_provider_url
-  vpc_id          = module.vpc.vpc_id
-  region          = local.region
-  namespace       = "retail-app"
+  vpc_id            = module.vpc.vpc_id
+  region            = local.region
+  namespace         = local.namespace
+
+  depends_on = [module.app]
 }
 
 ############################
-# App Module
+# App Module (creates retail-app namespace via Helm)
 ############################
 module "app" {
   source = "../../modules/app"
 
-  cluster_name         = module.eks.cluster_name
-  namespace            = "retail-app"
-  catalog_db_endpoint   = module.persistence.mysql_endpoint
-  catalog_db_port      = module.persistence.mysql_port
-  catalog_db_username  = module.persistence.catalog_db_username
-  catalog_db_password  = module.persistence.catalog_db_password
-  orders_db_endpoint   = module.persistence.postgres_endpoint
-  orders_db_port       = module.persistence.postgres_port
-  orders_db_name       = module.persistence.orders_db_name
-  orders_db_username   = module.persistence.orders_db_username
-  orders_db_password   = module.persistence.orders_db_password
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  cluster_name        = module.eks.cluster_name
+  namespace           = local.namespace
+  catalog_db_endpoint = module.persistence.mysql_endpoint
+  catalog_db_port     = module.persistence.mysql_port
+  catalog_db_username = module.persistence.catalog_db_username
+  catalog_db_password = module.persistence.catalog_db_password
+  orders_db_endpoint  = module.persistence.postgres_endpoint
+  orders_db_port      = module.persistence.postgres_port
+  orders_db_name      = module.persistence.orders_db_name
+  orders_db_username  = module.persistence.orders_db_username
+  orders_db_password  = module.persistence.orders_db_password
 }
 
 ############################

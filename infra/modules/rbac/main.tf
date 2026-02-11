@@ -47,7 +47,7 @@ resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
       {
         Effect   = "Allow"
         Action   = ["eks:DescribeCluster"]
-        Resource = "arn:aws:eks:*:*:cluster/project-bedrock-cluster"
+        Resource = "arn:aws:eks:*:*:cluster/${var.cluster_name}"
       }
     ]
   })

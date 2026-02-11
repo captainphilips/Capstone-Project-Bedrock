@@ -5,41 +5,23 @@ terraform {
       version = "~> 5.0"
     }
     kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "~> 3.0"
+      source                = "hashicorp/kubernetes"
+      version               = "~> 3.0"
+      configuration_aliases = [kubernetes]
     }
     helm = {
-      source  = "hashicorp/helm"
-      version = "~> 3.0"
+      source                = "hashicorp/helm"
+      version               = "~> 3.0"
+      configuration_aliases = [helm]
     }
   }
 }
 
-data "aws_eks_cluster" "this" {
-  name = var.cluster_name
-}
-
-data "aws_eks_cluster_auth" "this" {
-  name = var.cluster_name
-}
+# Uses kubernetes/helm providers passed from root
 
 locals {
   namespace       = "external-secrets"
   service_account = "external-secrets"
-}
-
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-  token                  = data.aws_eks_cluster_auth.this.token
-}
-
-provider "helm" {
-  kubernetes = {
-    host                   = data.aws_eks_cluster.this.endpoint
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority[0].data)
-    token                  = data.aws_eks_cluster_auth.this.token
-  }
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -80,8 +62,8 @@ resource "aws_iam_role" "external_secrets" {
 
 data "aws_iam_policy_document" "secrets_access" {
   statement {
-    effect  = "Allow"
-    actions = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
+    effect    = "Allow"
+    actions   = ["secretsmanager:GetSecretValue", "secretsmanager:DescribeSecret"]
     resources = [var.mysql_secret_arn, var.postgres_secret_arn]
   }
 }
@@ -146,7 +128,7 @@ resource "kubernetes_manifest" "catalog_external_secret" {
     kind       = "ExternalSecret"
     metadata = {
       name      = "catalog-db"
-      namespace = "retail-app"
+      namespace = var.namespace
     }
     spec = {
       refreshInterval = "1h"
@@ -176,7 +158,7 @@ resource "kubernetes_manifest" "orders_external_secret" {
     kind       = "ExternalSecret"
     metadata = {
       name      = "orders-db"
-      namespace = "retail-app"
+      namespace = var.namespace
     }
     spec = {
       refreshInterval = "1h"

@@ -49,11 +49,17 @@ try {
     Write-Host "  DynamoDB table ready" -ForegroundColor Green
 }
 
-# 3. Package Lambda
+# 3. Package Lambda (Python script - cross-platform, no zip utility needed)
 Write-Host "`n[3/6] Packaging Lambda function..." -ForegroundColor Yellow
-$lambdaBuild = Join-Path $RepoRoot "lambda\hello\build"
-if (-not (Test-Path $lambdaBuild)) { New-Item -ItemType Directory -Path $lambdaBuild -Force }
-Compress-Archive -Path (Join-Path $RepoRoot "lambda\hello\handler.py") -DestinationPath (Join-Path $lambdaBuild "handler.zip") -Force
+$pyScript = Join-Path $RepoRoot "scripts\package_lambda_handler.py"
+if (Get-Command python -ErrorAction SilentlyContinue) {
+    python $pyScript
+} elseif (Get-Command python3 -ErrorAction SilentlyContinue) {
+    python3 $pyScript
+} else {
+    Write-Host "  ERROR: Python is required. Install Python and try again." -ForegroundColor Red
+    exit 1
+}
 Write-Host "  Lambda package: lambda/hello/build/handler.zip" -ForegroundColor Green
 
 # 4. Terraform Init

@@ -33,7 +33,7 @@ data "aws_eks_cluster_auth" "bedrock" {
 }
 
 ################################################################################
-# Managed Node Group (t3.medium × 2 nodes — cost-conscious)
+# Managed Node Group (t3.large for retail-app resource requirements)
 ################################################################################
 
 resource "aws_eks_node_group" "bedrock" {
@@ -41,12 +41,12 @@ resource "aws_eks_node_group" "bedrock" {
   node_group_name = "project-bedrock-nodes"
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = local.effective_subnet_ids
-  instance_types  = ["t3.medium"]
+  instance_types  = ["t3.large"]
 
   scaling_config {
-    desired_size = 2
+    desired_size = 3
     min_size     = 2
-    max_size     = 3
+    max_size     = 5
   }
 
   tags = merge(

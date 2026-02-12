@@ -36,8 +36,10 @@ resource "aws_subnet" "public" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-public-${count.index + 1}"
-      Project = "Bedrock-Terraform"
+      Name                                       = "project-bedrock-public-${count.index + 1}"
+      Project                                    = "Bedrock-Terraform"
+      "kubernetes.io/role/elb"                   = "1"
+      "kubernetes.io/cluster/${var.cluster_tag}" = "shared"
     }
   )
 }
@@ -51,8 +53,10 @@ resource "aws_subnet" "private" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-private-${count.index + 1}"
-      Project = "Bedrock-Terraform"
+      Name                                       = "project-bedrock-private-${count.index + 1}"
+      Project                                    = "Bedrock-Terraform"
+      "kubernetes.io/role/internal-elb"          = "1"
+      "kubernetes.io/cluster/${var.cluster_tag}" = "shared"
     }
   )
 }

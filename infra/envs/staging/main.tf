@@ -47,8 +47,9 @@ locals {
 module "vpc" {
   source = "../../modules/vpc"
 
-  vpc_cidr = "10.0.0.0/16"
-  tags     = local.tags
+  vpc_cidr    = "10.0.0.0/16"
+  cluster_tag = local.cluster_name
+  tags        = local.tags
 }
 
 ############################

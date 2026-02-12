@@ -134,8 +134,8 @@ resource "aws_iam_openid_connect_provider" "bedrock" {
 
   tags = merge(
     var.tags,
-    {
-      Project = "Bedrock-Terraform"
-    }
+    { Project = "Bedrock-Terraform" }
   )
+
+  depends_on = [aws_eks_cluster.bedrock]
 }

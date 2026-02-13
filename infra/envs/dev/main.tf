@@ -2,6 +2,7 @@
 # Dev Environment - Root Module
 ############################
 # Orchestrates all modules for full stack deployment
+# Locals are in locals.tf (do not duplicate here)
 
 ############################
 # Variables

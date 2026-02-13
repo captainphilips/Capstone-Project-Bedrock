@@ -25,22 +25,6 @@ variable "use_existing_bedrock_dev_view_user" {
   default     = false
 }
 
-locals {
-  region        = var.aws_region
-  environment   = var.environment
-  cluster_name  = "barakat-2025-capstone-bedrock-cluster"
-  vpc_name      = "barakat-2025-capstone-bedrock-vpc"
-  assets_bucket = "barakat-2025-capstone-bedrock-assets-0347"
-  lambda_name   = "barakat-2025-capstone-bedrock-asset-processor"
-  namespace     = "retail-app"
-
-  tags = {
-    Project     = "barakat-2025-capstone"
-    Environment = local.environment
-    ManagedBy   = "Terraform"
-  }
-}
-
 ############################
 # VPC Module
 ############################

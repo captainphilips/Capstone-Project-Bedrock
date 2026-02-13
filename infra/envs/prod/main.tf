@@ -25,29 +25,13 @@ variable "use_existing_bedrock_dev_view_user" {
   default     = false
 }
 
-locals {
-  region        = var.aws_region
-  environment   = var.environment
-  cluster_name  = "barakat-2025-capstone-bedrock-cluster"
-  vpc_name      = "barakat-2025-capstone-bedrock-vpc"
-  assets_bucket = "barakat-2025-capstone-bedrock-assets-0347"
-  lambda_name   = "barakat-2025-capstone-bedrock-asset-processor"
-  namespace     = "retail-app"
-
-  tags = {
-    Project     = "barakat-2025-capstone"
-    Environment = local.environment
-    ManagedBy   = "Terraform"
-  }
-}
-
 ############################
 # VPC Module
 ############################
 module "vpc" {
   source = "../../modules/vpc"
 
-  vpc_cidr    = "10.0.0.0/16"
+  vpc_cidr    = local.vpc_cidr
   cluster_tag = local.cluster_name
   tags        = local.tags
 }
@@ -73,7 +57,7 @@ module "persistence" {
 
   environment        = local.environment
   vpc_id             = module.vpc.vpc_id
-  vpc_cidr           = "10.0.0.0/16"
+  vpc_cidr           = local.vpc_cidr
   private_subnet_ids = module.vpc.private_subnets
   multi_az           = true
   tags               = local.tags

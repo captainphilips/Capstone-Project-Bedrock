@@ -1,6 +1,6 @@
-# Project Bedrock
+# Project: barakat-2025-capstone-bedrock
 
-A Production-Grade Microservices Platform on AWS EKS
+Deploy a secure, scalable, production-ready Kubernetes environment on AWS EKS for the AWS Retail Store Sample Application with full automation, observability, and event-driven architecture.
 
 ## Table of Contents
 

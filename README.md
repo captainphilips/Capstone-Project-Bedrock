@@ -1,6 +1,6 @@
 # Project: barakat-2025-capstone-bedrock
 
-Deploy a secure, scalable, production-ready Kubernetes environment on AWS EKS for the AWS Retail Store Sample Application with full automation, observability, and event-driven architecture.
+**Mission:** Deploy a secure, scalable, production-ready Kubernetes environment on AWS EKS for the AWS Retail Store Sample Application with full automation, observability, and event-driven architecture.
 
 ## Table of Contents
 

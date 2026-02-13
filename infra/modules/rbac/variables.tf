@@ -23,7 +23,7 @@ variable "assets_bucket_name" {
 }
 
 variable "use_existing_bedrock_dev_view_user" {
-  description = "Set to true if bedrock-dev-view IAM user already exists (e.g. from partial apply)"
+  description = "Set to true if barakat-2025-capstone-bedrock-dev-view IAM user already exists"
   type        = bool
   default     = false
 }

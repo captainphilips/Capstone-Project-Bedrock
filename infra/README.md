@@ -15,7 +15,7 @@ infra/
     ├── eks/                 # EKS cluster, node groups
     ├── persistence/         # RDS MySQL, Postgres, Secrets Manager
     ├── serverless/          # Lambda, S3 assets bucket
-    ├── rbac/                # IAM user bedrock-dev-view, EKS access
+    ├── rbac/                # IAM user barakat-2025-capstone-bedrock-dev-view, EKS access
     ├── observability/       # CloudWatch Observability addon
     ├── external_secrets/    # External Secrets Operator
     ├── alb_controller/      # AWS Load Balancer Controller + Ingress

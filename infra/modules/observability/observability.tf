@@ -3,7 +3,7 @@
 ################################################################################
 
 resource "aws_iam_role" "cloudwatch_agent" {
-  name = "project-bedrock-cw-agent-role"
+  name = "barakat-2025-capstone-cw-agent-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -26,7 +26,7 @@ resource "aws_iam_role" "cloudwatch_agent" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -52,7 +52,7 @@ resource "aws_eks_addon" "cloudwatch" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }

@@ -17,10 +17,10 @@ echo "=========================================="
 echo "Expected Log Groups"
 echo "=========================================="
 echo ""
-echo "✓ /aws/eks/project-bedrock-cluster/cluster"
+echo "✓ /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster"
 echo "  └─ Control plane logs (api, audit, authenticator, controllerManager, scheduler)"
 echo ""
-echo "✓ /aws/eks/project-bedrock-cluster/containers"
+echo "✓ /aws/eks/barakat-2025-capstone-bedrock-cluster/containers"
 echo "  └─ Application container logs (via CloudWatch Agent)"
 echo ""
 
@@ -29,9 +29,9 @@ echo "Log Streams in Control Plane Log Group"
 echo "=========================================="
 echo ""
 
-if aws logs describe-log-streams --log-group-name /aws/eks/project-bedrock-cluster/cluster --region us-east-1 >/dev/null 2>&1; then
+if aws logs describe-log-streams --log-group-name /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster --region us-east-1 >/dev/null 2>&1; then
   echo "Log streams found:"
-  aws logs describe-log-streams --log-group-name /aws/eks/project-bedrock-cluster/cluster --region us-east-1 --query 'logStreams[].logStreamName' --output text | tr '\t' '\n'
+  aws logs describe-log-streams --log-group-name /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster --region us-east-1 --query 'logStreams[].logStreamName' --output text | tr '\t' '\n'
   
   echo ""
   echo "Sample recent logs (last 5 minutes):"
@@ -41,13 +41,13 @@ if aws logs describe-log-streams --log-group-name /aws/eks/project-bedrock-clust
   START_TIME=$(($(date +%s) * 1000 - 300000))
   
   aws logs filter-log-events \
-    --log-group-name /aws/eks/project-bedrock-cluster/cluster \
+    --log-group-name /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster \
     --start-time "$START_TIME" \
     --region us-east-1 \
     --query 'events[0:10].[timestamp,message]' \
     --output text || echo "No recent logs found"
 else
-  echo "⚠️  Log group /aws/eks/project-bedrock-cluster/cluster not found yet"
+  echo "⚠️  Log group /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster not found yet"
   echo "   This is normal immediately after cluster creation. Logs may take a few minutes to appear."
 fi
 

@@ -8,8 +8,8 @@ resource "aws_vpc" "this" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-vpc"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-bedrock-vpc"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -20,8 +20,8 @@ resource "aws_internet_gateway" "this" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-igw"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-igw"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -36,8 +36,8 @@ resource "aws_subnet" "public" {
   tags = merge(
     var.tags,
     {
-      Name                                       = "project-bedrock-public-${count.index + 1}"
-      Project                                    = "Bedrock-Terraform"
+      Name                                       = "barakat-2025-capstone-public-${count.index + 1}"
+      Project                                    = "barakat-2025-capstone"
       "kubernetes.io/role/elb"                   = "1"
       "kubernetes.io/cluster/${var.cluster_tag}" = "shared"
     }
@@ -53,8 +53,8 @@ resource "aws_subnet" "private" {
   tags = merge(
     var.tags,
     {
-      Name                                       = "project-bedrock-private-${count.index + 1}"
-      Project                                    = "Bedrock-Terraform"
+      Name                                       = "barakat-2025-capstone-private-${count.index + 1}"
+      Project                                    = "barakat-2025-capstone"
       "kubernetes.io/role/internal-elb"          = "1"
       "kubernetes.io/cluster/${var.cluster_tag}" = "shared"
     }
@@ -67,8 +67,8 @@ resource "aws_eip" "nat" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-nat-eip"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-nat-eip"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -80,8 +80,8 @@ resource "aws_nat_gateway" "this" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-nat"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-nat"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -97,8 +97,8 @@ resource "aws_route_table" "public" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-public-rt"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-public-rt"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -120,8 +120,8 @@ resource "aws_route_table" "private" {
   tags = merge(
     var.tags,
     {
-      Name    = "project-bedrock-private-rt"
-      Project = "Bedrock-Terraform"
+      Name    = "barakat-2025-capstone-private-rt"
+      Project = "barakat-2025-capstone"
     }
   )
 }

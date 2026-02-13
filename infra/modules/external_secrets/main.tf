@@ -49,13 +49,13 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "external_secrets" {
-  name               = "project-bedrock-external-secrets-role"
+  name               = "barakat-2025-capstone-external-secrets-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -69,7 +69,7 @@ data "aws_iam_policy_document" "secrets_access" {
 }
 
 resource "aws_iam_policy" "secrets_access" {
-  name   = "project-bedrock-secrets-access"
+  name   = "barakat-2025-capstone-secrets-access"
   policy = data.aws_iam_policy_document.secrets_access.json
 }
 
@@ -140,11 +140,11 @@ resource "kubernetes_manifest" "catalog_external_secret" {
         name = "catalog-db"
       }
       data = [
-        { secretKey = "username", remoteRef = { key = "project-bedrock/catalog-db", property = "username" } },
-        { secretKey = "password", remoteRef = { key = "project-bedrock/catalog-db", property = "password" } },
-        { secretKey = "endpoint", remoteRef = { key = "project-bedrock/catalog-db", property = "endpoint" } },
-        { secretKey = "port", remoteRef = { key = "project-bedrock/catalog-db", property = "port" } },
-        { secretKey = "database", remoteRef = { key = "project-bedrock/catalog-db", property = "database" } }
+        { secretKey = "username", remoteRef = { key = "barakat-2025-capstone/catalog-db", property = "username" } },
+        { secretKey = "password", remoteRef = { key = "barakat-2025-capstone/catalog-db", property = "password" } },
+        { secretKey = "endpoint", remoteRef = { key = "barakat-2025-capstone/catalog-db", property = "endpoint" } },
+        { secretKey = "port", remoteRef = { key = "barakat-2025-capstone/catalog-db", property = "port" } },
+        { secretKey = "database", remoteRef = { key = "barakat-2025-capstone/catalog-db", property = "database" } }
       ]
     }
   }
@@ -170,11 +170,11 @@ resource "kubernetes_manifest" "orders_external_secret" {
         name = "orders-db"
       }
       data = [
-        { secretKey = "username", remoteRef = { key = "project-bedrock/orders-db", property = "username" } },
-        { secretKey = "password", remoteRef = { key = "project-bedrock/orders-db", property = "password" } },
-        { secretKey = "endpoint", remoteRef = { key = "project-bedrock/orders-db", property = "endpoint" } },
-        { secretKey = "port", remoteRef = { key = "project-bedrock/orders-db", property = "port" } },
-        { secretKey = "database", remoteRef = { key = "project-bedrock/orders-db", property = "database" } }
+        { secretKey = "username", remoteRef = { key = "barakat-2025-capstone/orders-db", property = "username" } },
+        { secretKey = "password", remoteRef = { key = "barakat-2025-capstone/orders-db", property = "password" } },
+        { secretKey = "endpoint", remoteRef = { key = "barakat-2025-capstone/orders-db", property = "endpoint" } },
+        { secretKey = "port", remoteRef = { key = "barakat-2025-capstone/orders-db", property = "port" } },
+        { secretKey = "database", remoteRef = { key = "barakat-2025-capstone/orders-db", property = "database" } }
       ]
     }
   }

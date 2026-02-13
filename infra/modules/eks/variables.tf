@@ -4,7 +4,7 @@
 variable "cluster_name" {
   description = "EKS cluster name"
   type        = string
-  default     = "project-bedrock-cluster"
+  default     = "barakat-2025-capstone-bedrock-cluster"
 }
 
 variable "cluster_version" {

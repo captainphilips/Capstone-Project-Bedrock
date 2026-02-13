@@ -1,9 +1,9 @@
 #!/bin/bash
-# Verify CloudWatch metrics and Container Insights for project-bedrock-cluster
+# Verify CloudWatch metrics and Container Insights for barakat-2025-capstone-bedrock-cluster
 
 set -e
 REGION="us-east-1"
-CLUSTER="project-bedrock-cluster"
+CLUSTER="barakat-2025-capstone-bedrock-cluster"
 
 echo "=========================================="
 echo "Verifying CloudWatch Metrics"

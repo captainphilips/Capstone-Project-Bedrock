@@ -49,19 +49,19 @@ data "aws_iam_policy_document" "assume_role" {
 }
 
 resource "aws_iam_role" "alb_controller" {
-  name               = "project-bedrock-alb-controller-role"
+  name               = "barakat-2025-capstone-alb-controller-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 resource "aws_iam_policy" "alb_controller" {
-  name = "project-bedrock-alb-controller-policy"
+  name = "barakat-2025-capstone-alb-controller-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

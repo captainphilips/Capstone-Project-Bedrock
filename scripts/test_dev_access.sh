@@ -25,7 +25,7 @@ read -p "Press Enter after configuring the profile..."
 echo ""
 echo "Step 2: Updating kubeconfig with dev user profile..."
 aws eks update-kubeconfig \
-  --name project-bedrock-cluster \
+  --name barakat-2025-capstone-bedrock-cluster \
   --region us-east-1 \
   --profile bedrock-dev \
   --alias bedrock-dev

@@ -15,7 +15,7 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     """
-    Process S3 upload events. Logs to CloudWatch (/aws/lambda/bedrock-asset-processor).
+    Process S3 upload events. Logs to CloudWatch (/aws/lambda/barakat-2025-capstone-bedrock-asset-processor).
     """
     request_id = getattr(context, "aws_request_id", "unknown") if context else "unknown"
     logger.info("Lambda invoked, request_id=%s, event_keys=%s", request_id, list(event.keys()))

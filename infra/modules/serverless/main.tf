@@ -26,7 +26,7 @@ resource "aws_iam_role" "lambda_role" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -55,7 +55,7 @@ resource "aws_lambda_function" "this" {
   tags = merge(
     var.tags,
     { Name = var.function_name },
-    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "project-bedrock-vpc" } : {}
+    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "barakat-2025-capstone-bedrock-vpc" } : {}
   )
 }
 
@@ -64,8 +64,8 @@ resource "aws_s3_bucket" "assets" {
 
   tags = merge(
     var.tags,
-    { Name = "project-bedrock-assets" },
-    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "project-bedrock-vpc" } : {}
+    { Name = "barakat-2025-capstone-bedrock-assets" },
+    var.vpc_id != null ? { VpcId = var.vpc_id, VpcName = "barakat-2025-capstone-bedrock-vpc" } : {}
   )
 }
 

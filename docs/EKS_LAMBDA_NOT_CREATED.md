@@ -74,7 +74,7 @@ terraform apply -auto-approve     # Creates everything (VPC + EKS + Lambda + app
 terraform output
 # Expect: cluster_endpoint, cluster_name, assets_bucket_name, vpc_id, etc.
 
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 kubectl get pods -n retail-app
 kubectl get ingress -n retail-app
 ```

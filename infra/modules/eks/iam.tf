@@ -4,7 +4,7 @@
 # IAM Role for EKS control plane (least privilege — only what EKS control plane needs)
 
 resource "aws_iam_role" "eks_cluster" {
-  name = "project-bedrock-eks-cluster-role"
+  name = "barakat-2025-capstone-eks-cluster-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -22,7 +22,7 @@ resource "aws_iam_role" "eks_cluster" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -42,7 +42,7 @@ resource "aws_iam_role_policy_attachment" "eks_cluster" {
 # IAM Role for worker nodes with permissions for container registry access, CNI plugin, and node operations
 
 resource "aws_iam_role" "eks_nodes" {
-  name = "project-bedrock-eks-nodes-role"
+  name = "barakat-2025-capstone-eks-nodes-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -60,7 +60,7 @@ resource "aws_iam_role" "eks_nodes" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -104,13 +104,13 @@ data "aws_iam_policy_document" "ebs_csi_assume" {
 }
 
 resource "aws_iam_role" "ebs_csi_driver" {
-  name               = "project-bedrock-ebs-csi-role"
+  name               = "barakat-2025-capstone-ebs-csi-role"
   assume_role_policy = data.aws_iam_policy_document.ebs_csi_assume.json
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -134,7 +134,7 @@ resource "aws_iam_openid_connect_provider" "bedrock" {
 
   tags = merge(
     var.tags,
-    { Project = "Bedrock-Terraform" }
+    { Project = "barakat-2025-capstone" }
   )
 
   depends_on = [aws_eks_cluster.bedrock]

@@ -53,7 +53,7 @@ terraform apply -input=false tfplan
 echo ""
 echo "=== Deployment Complete ==="
 echo "Next steps:"
-echo "  1. aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster"
+echo "  1. aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster"
 echo "  2. kubectl get ingress -n retail-app"
 echo "  3. terraform output"
 echo ""

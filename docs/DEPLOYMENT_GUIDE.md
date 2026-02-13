@@ -8,7 +8,7 @@
 |---------|-------------|
 | [1. Pipeline Triggers](#1-how-to-trigger-the-pipeline) | How to run CI/CD workflows |
 | [2. Retail Store URL](#2-retail-store-application-url) | Access the running application |
-| [3. Grading Credentials](#3-grading-credentials-bedrock-dev-view) | Access Key and Secret Key for grading |
+| [3. Grading Credentials](#3-grading-credentials-barakat-2025-capstone-bedrock-dev-view) | Access Key and Secret Key for grading |
 
 ---
 
@@ -156,7 +156,7 @@ The Retail Store UI is exposed via an Application Load Balancer (ALB) created by
 #### Step 1: Configure kubectl
 
 ```bash
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 ```
 
 #### Step 2: Retrieve the Ingress Address
@@ -219,9 +219,9 @@ http://k8s-retail-xxxxx-xxxxxxxxxx-xxxxxxxx.us-east-1.elb.amazonaws.com
 
 ---
 
-## 3. Grading Credentials (bedrock-dev-view)
+## 3. Grading Credentials (barakat-2025-capstone-bedrock-dev-view)
 
-The IAM user **bedrock-dev-view** is provisioned by Terraform (RBAC module) and has read-only AWS access plus EKS view and S3 PutObject for the assets bucket.
+The IAM user **barakat-2025-capstone-bedrock-dev-view** is provisioned by Terraform (RBAC module) and has read-only AWS access plus EKS view and S3 PutObject for the assets bucket.
 
 ### Retrieving Access Key and Secret Key
 
@@ -270,14 +270,14 @@ terraform output -json | jq -r '{
 ### Using the Credentials
 
 ```bash
-aws configure --profile bedrock-dev-view
+aws configure --profile barakat-2025-capstone-bedrock-dev-view
 # AWS Access Key ID: [paste Access Key ID]
 # AWS Secret Access Key: [paste Secret Access Key]
 # Default region: us-east-1
 
 # Verify
-aws sts get-caller-identity --profile bedrock-dev-view
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev-view
+aws sts get-caller-identity --profile barakat-2025-capstone-bedrock-dev-view
+aws eks describe-cluster --name barakat-2025-capstone-bedrock-cluster --region us-east-1 --profile barakat-2025-capstone-bedrock-dev-view
 ```
 
 ---
@@ -287,8 +287,8 @@ aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --pro
 | Service | Permission |
 |---------|------------|
 | AWS (general) | ReadOnlyAccess |
-| EKS | DescribeCluster for project-bedrock-cluster |
-| S3 | PutObject, PutObjectAcl on bedrock-assets-ALTSOE025-0347 |
+| EKS | DescribeCluster for barakat-2025-capstone-bedrock-cluster |
+| S3 | PutObject, PutObjectAcl on barakat-2025-capstone-bedrock-assets-0347 |
 
 ---
 
@@ -327,13 +327,13 @@ All resources adhere to these conventions:
 | Resource | Value |
 |----------|-------|
 | AWS Region | `us-east-1` (N. Virginia) |
-| EKS Cluster Name | `project-bedrock-cluster` |
-| VPC Name Tag | `project-bedrock-vpc` |
+| EKS Cluster Name | `barakat-2025-capstone-bedrock-cluster` |
+| VPC Name Tag | `barakat-2025-capstone-bedrock-vpc` |
 | Application Namespace | `retail-app` |
-| IAM User (Developer) | `bedrock-dev-view` |
-| S3 Bucket (Assets) | `bedrock-assets-ALTSOE025-0347` |
-| Lambda Function | `bedrock-asset-processor` |
-| Resource Tag | `Project: Bedrock-Terraform` |
+| IAM User (Developer) | `barakat-2025-capstone-bedrock-dev-view` |
+| S3 Bucket (Assets) | `barakat-2025-capstone-bedrock-assets-0347` |
+| Lambda Function | `barakat-2025-capstone-bedrock-asset-processor` |
+| Resource Tag | `Project: barakat-2025-capstone` |
 | EKS Version | `>= 1.34` |
 
 ### Root Module Outputs (Mandatory)
@@ -482,7 +482,7 @@ terraform output
 ```bash
 aws eks update-kubeconfig \
   --region us-east-1 \
-  --name project-bedrock-cluster
+  --name barakat-2025-capstone-bedrock-cluster
 
 kubectl get nodes
 kubectl get namespaces
@@ -498,7 +498,7 @@ kubectl get namespaces
 | Plan (dev) | `cd infra/envs/dev && terraform plan -out=tfplan` |
 | Apply (dev) | `cd infra/envs/dev && terraform apply tfplan` |
 | Outputs | `cd infra/envs/dev && terraform output -json > ../../grading.json` |
-| EKS kubeconfig | `aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster` |
+| EKS kubeconfig | `aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster` |
 | Lambda package | `bash scripts/package_lambda_handler.sh` |
 
 ---
@@ -507,10 +507,10 @@ kubectl get namespaces
 
 ### S3 bucket name already taken
 
-S3 bucket names are globally unique. If `bedrock-assets-ALTSOE025-0347` exists, append a unique suffix (e.g., AWS account ID) and update `infra/envs/dev/main.tf`:
+S3 bucket names are globally unique. If `barakat-2025-capstone-bedrock-assets-0347` exists, append a unique suffix (e.g., AWS account ID) and update `infra/envs/dev/main.tf`:
 
 ```hcl
-assets_bucket_name = "bedrock-assets-ALTSOE025-0347-YOUR_ACCOUNT_ID"
+assets_bucket_name = "barakat-2025-capstone-bedrock-assets-0347-YOUR_ACCOUNT_ID"
 ```
 
 ### Lambda apply fails: "file not found"
@@ -532,7 +532,7 @@ kubectl get nodes -w
 
 ### Access denied to EKS
 
-Use IAM user `bedrock-dev-view` credentials and run `aws eks update-kubeconfig` after the user is granted access via Terraform RBAC.
+Use IAM user `barakat-2025-capstone-bedrock-dev-view` credentials and run `aws eks update-kubeconfig` after the user is granted access via Terraform RBAC.
 
 ---
 
@@ -542,15 +542,15 @@ Use IAM user `bedrock-dev-view` credentials and run `aws eks update-kubeconfig` 
 ┌─────────────────────────────────────────────────────────────────┐
 │                        us-east-1                                 │
 │  ┌──────────────────────────────────────────────────────────┐   │
-│  │ project-bedrock-vpc (10.0.0.0/16)                        │   │
+│  │ barakat-2025-capstone-bedrock-vpc (10.0.0.0/16)                        │   │
 │  │  ┌─────────────────┐    ┌─────────────────────────────┐  │   │
 │  │  │ Public Subnets   │    │ Private Subnets (EKS)       │  │   │
-│  │  │ + NAT Gateway   │    │ project-bedrock-cluster     │  │   │
+│  │  │ + NAT Gateway   │    │ barakat-2025-capstone-bedrock-cluster     │  │   │
 │  │  └─────────────────┘    │ - retail-app namespace     │  │   │
 │  │                          └─────────────────────────────┘  │   │
 │  └──────────────────────────────────────────────────────────┘   │
 │                                                                  │
-│  bedrock-assets-ALTSOE025-0347 ──► bedrock-asset-processor       │
-│  IAM: bedrock-dev-view                                           │
+│  barakat-2025-capstone-bedrock-assets-0347 ──► barakat-2025-capstone-bedrock-asset-processor       │
+│  IAM: barakat-2025-capstone-bedrock-dev-view                                           │
 └─────────────────────────────────────────────────────────────────┘
 ```

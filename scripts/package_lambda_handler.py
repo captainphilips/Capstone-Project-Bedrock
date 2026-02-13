@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Cross-platform Lambda packaging script.
-Creates handler.zip for the bedrock-asset-processor Lambda.
+Creates handler.zip for the barakat-2025-capstone-bedrock-asset-processor Lambda.
 Works on Windows, Linux, and macOS without requiring the zip utility.
 """
 

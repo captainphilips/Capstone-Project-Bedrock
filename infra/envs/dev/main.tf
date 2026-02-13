@@ -20,7 +20,7 @@ variable "cluster_version" {
 }
 
 variable "use_existing_bedrock_dev_view_user" {
-  description = "Set true if bedrock-dev-view IAM user already exists"
+  description = "Set true if barakat-2025-capstone-bedrock-dev-view IAM user already exists"
   type        = bool
   default     = false
 }
@@ -28,14 +28,14 @@ variable "use_existing_bedrock_dev_view_user" {
 locals {
   region        = var.aws_region
   environment   = var.environment
-  cluster_name  = "project-bedrock-cluster"
-  vpc_name      = "project-bedrock-vpc"
-  assets_bucket = "bedrock-assets-ALTSOE025-0347"
-  lambda_name   = "bedrock-asset-processor"
+  cluster_name  = "barakat-2025-capstone-bedrock-cluster"
+  vpc_name      = "barakat-2025-capstone-bedrock-vpc"
+  assets_bucket = "barakat-2025-capstone-bedrock-assets-0347"
+  lambda_name   = "barakat-2025-capstone-bedrock-asset-processor"
   namespace     = "retail-app"
 
   tags = {
-    Project     = "Bedrock-Terraform"
+    Project     = "barakat-2025-capstone"
     Environment = local.environment
     ManagedBy   = "Terraform"
   }
@@ -213,13 +213,13 @@ output "assets_bucket_name" {
 }
 
 output "bedrock_dev_view_access_key_id" {
-  description = "Access key ID for bedrock-dev-view"
+  description = "Access key ID for barakat-2025-capstone-bedrock-dev-view"
   value       = module.rbac.bedrock_dev_view_access_key_id
   sensitive   = true
 }
 
 output "bedrock_dev_view_secret_access_key" {
-  description = "Secret access key for bedrock-dev-view"
+  description = "Secret access key for barakat-2025-capstone-bedrock-dev-view"
   value       = module.rbac.bedrock_dev_view_secret_access_key
   sensitive   = true
 }

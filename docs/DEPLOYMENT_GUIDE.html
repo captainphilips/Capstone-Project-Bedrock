@@ -64,15 +64,15 @@ git push origin main</pre>
   <h3>How to Obtain the URL</h3>
   <p>The Retail Store UI is exposed via an ALB. After deployment:</p>
   <pre># Configure kubectl
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 
 # Get the Ingress address
 kubectl get ingress -n retail-app</pre>
   <p>Use the ADDRESS column (e.g. <code>http://k8s-retail-xxxxx-xxx.us-east-1.elb.amazonaws.com</code>). The ALB may take 5–15 minutes to become available.</p>
   <hr>
 
-  <h2>3. Grading Credentials (bedrock-dev-view)</h2>
-  <p>The IAM user <strong>bedrock-dev-view</strong> has read-only AWS access plus EKS view and S3 PutObject.</p>
+  <h2>3. Grading Credentials (barakat-2025-capstone-bedrock-dev-view)</h2>
+  <p>The IAM user <strong>barakat-2025-capstone-bedrock-dev-view</strong> has read-only AWS access plus EKS view and S3 PutObject.</p>
   <h3>Retrieving Access Key and Secret Key</h3>
   <p><strong>Option A — Terraform CLI:</strong></p>
   <pre>cd infra/envs/dev
@@ -98,12 +98,12 @@ terraform output -json | jq -r '{
   <table>
     <tr><th>Resource</th><th>Value</th></tr>
     <tr><td>AWS Region</td><td>us-east-1</td></tr>
-    <tr><td>EKS Cluster</td><td>project-bedrock-cluster</td></tr>
-    <tr><td>VPC Name</td><td>project-bedrock-vpc</td></tr>
+    <tr><td>EKS Cluster</td><td>barakat-2025-capstone-bedrock-cluster</td></tr>
+    <tr><td>VPC Name</td><td>barakat-2025-capstone-bedrock-vpc</td></tr>
     <tr><td>Namespace</td><td>retail-app</td></tr>
-    <tr><td>IAM User</td><td>bedrock-dev-view</td></tr>
-    <tr><td>S3 Bucket</td><td>bedrock-assets-ALTSOE025-0347</td></tr>
-    <tr><td>Lambda</td><td>bedrock-asset-processor</td></tr>
+    <tr><td>IAM User</td><td>barakat-2025-capstone-bedrock-dev-view</td></tr>
+    <tr><td>S3 Bucket</td><td>barakat-2025-capstone-bedrock-assets-0347</td></tr>
+    <tr><td>Lambda</td><td>barakat-2025-capstone-bedrock-asset-processor</td></tr>
   </table>
   <hr>
 
@@ -123,12 +123,12 @@ terraform output -json | jq -r '{
 
   <h2>Architecture Overview</h2>
   <pre>us-east-1
-├── project-bedrock-vpc (10.0.0.0/16)
+├── barakat-2025-capstone-bedrock-vpc (10.0.0.0/16)
 │   ├── Public Subnets + NAT
 │   └── Private Subnets (EKS)
-│       └── project-bedrock-cluster
+│       └── barakat-2025-capstone-bedrock-cluster
 │           └── retail-app namespace
-├── bedrock-assets-ALTSOE025-0347 → bedrock-asset-processor (Lambda)
-└── IAM: bedrock-dev-view</pre>
+├── barakat-2025-capstone-bedrock-assets-0347 → barakat-2025-capstone-barakat-2025-capstone-bedrock-asset-processor (Lambda)
+└── IAM: barakat-2025-capstone-bedrock-dev-view</pre>
 </body>
 </html>

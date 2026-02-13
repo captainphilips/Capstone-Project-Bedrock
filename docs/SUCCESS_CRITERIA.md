@@ -31,7 +31,7 @@ bash scripts/deploy_full_stack.sh
 
 ### Verification
 ```bash
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 kubectl get pods -n retail-app
 kubectl get ingress -n retail-app
 ```
@@ -49,7 +49,7 @@ kubectl get ingress -n retail-app
 ### Verification
 ```bash
 # Logs in CloudWatch
-aws logs describe-log-groups --log-group-name-prefix /aws/eks/project-bedrock-cluster --region us-east-1
+aws logs describe-log-groups --log-group-name-prefix /aws/eks/barakat-2025-capstone-bedrock-cluster --region us-east-1
 
 # Container Insights / Application Signals (after addon install)
 # → AWS Console → CloudWatch → Container Insights
@@ -62,7 +62,7 @@ aws logs describe-log-groups --log-group-name-prefix /aws/eks/project-bedrock-cl
 
 ### Implementation
 - **Security**: Private subnets, IAM IRSA, RBAC. See [docs/SECURITY.md](SECURITY.md)
-- **Developer access**: IAM user `bedrock-dev-view` with EKS view + S3 PutObject
+- **Developer access**: IAM user `barakat-2025-capstone-bedrock-dev-view` with EKS view + S3 PutObject
 - **Documentation**: [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md), [DEVELOPER_ONBOARDING.md](DEVELOPER_ONBOARDING.md)
 
 ### Verification
@@ -71,7 +71,7 @@ terraform output bedrock_dev_view_access_key_id
 terraform output bedrock_dev_view_secret_access_key
 # Configure AWS CLI with these → aws eks describe-cluster should work
 ```
-✅ **Pass** if: `bedrock-dev-view` can describe cluster and access S3 assets bucket.
+✅ **Pass** if: `barakat-2025-capstone-bedrock-dev-view` can describe cluster and access S3 assets bucket.
 
 ---
 
@@ -98,7 +98,7 @@ kubectl get nodes -o wide
 |---------|-----|
 | **Lambda apply fails** | Ensure `lambda/hello/build/handler.zip` exists (run `python3 scripts/package_lambda_handler.py` or `bash scripts/package_lambda_handler.sh`) |
 | **EKS: unsupported Kubernetes version 1.27** | Use 1.29, 1.31, 1.32, 1.33, or 1.34. Set `cluster_version = "1.29"` in terraform.tfvars |
-| **IAM: bedrock-dev-view already exists** | Set `use_existing_bedrock_dev_view_user = true` in terraform.tfvars |
+| **IAM: barakat-2025-capstone-bedrock-dev-view already exists** | Set `use_existing_bedrock_dev_view_user = true` in terraform.tfvars |
 | **Partial apply (only VPC)** | Run `terraform apply -auto-approve` again; check for errors in EKS, RDS, or serverless |
 | **No outputs** | Outputs appear only after full apply. Re-run apply to completion. |
 | **Observability addon fails** | Check addon compatibility: `aws eks describe-addon-versions --addon-name amazon-cloudwatch-observability --kubernetes-version 1.29` |

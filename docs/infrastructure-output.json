@@ -7,7 +7,7 @@
   "cluster_name": {
     "sensitive": false,
     "type": "string",
-    "value": "project-bedrock-cluster"
+    "value": "barakat-2025-capstone-bedrock-cluster"
   },
   "region": {
     "sensitive": false,
@@ -22,7 +22,7 @@
   "assets_bucket_name": {
     "sensitive": false,
     "type": "string",
-    "value": "bedrock-assets-ALTSOE025-0347"
+    "value": "barakat-2025-capstone-bedrock-assets-0347"
   },
   "bedrock_dev_view_access_key_id": {
     "sensitive": true,

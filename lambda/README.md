@@ -2,11 +2,11 @@
 
 AWS Lambda functions for Project Bedrock.
 
-## bedrock-asset-processor
+## barakat-2025-capstone-bedrock-asset-processor
 
 **Path**: `hello/`  
-**Function name**: `bedrock-asset-processor`  
-**Trigger**: S3 events on `bedrock-assets-ALTSOE025-0347` bucket  
+**Function name**: `barakat-2025-capstone-bedrock-asset-processor`  
+**Trigger**: S3 events on `barakat-2025-capstone-bedrock-assets-0347` bucket  
 **Runtime**: Python 3.10
 
 ### Build
@@ -33,5 +33,5 @@ Output: `lambda/hello/build/handler.zip` — referenced by Terraform. Ensure it 
 bash scripts/test_lambda.sh
 
 # View logs
-aws logs tail /aws/lambda/bedrock-asset-processor --region us-east-1 --follow
+aws logs tail /aws/lambda/barakat-2025-capstone-bedrock-asset-processor --region us-east-1 --follow
 ```

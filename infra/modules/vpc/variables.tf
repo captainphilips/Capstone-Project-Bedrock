@@ -15,5 +15,5 @@ variable "tags" {
 variable "cluster_tag" {
   description = "EKS cluster name for subnet discovery tags"
   type        = string
-  default     = "project-bedrock-cluster"
+  default     = "barakat-2025-capstone-bedrock-cluster"
 }

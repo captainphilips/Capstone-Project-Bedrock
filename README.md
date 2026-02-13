@@ -31,10 +31,10 @@ InnovateMart is a rapidly growing e-commerce startup focused on redefining the o
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                           AWS Cloud                                       │
 │  ┌──────────────────────────────────────────────────────────────────┐  │
-│  │  VPC (project-bedrock-vpc)                                         │  │
+│  │  VPC (barakat-2025-capstone-bedrock-vpc)                                         │  │
 │  │  ┌─────────────┐  ┌─────────────────┐  ┌──────────────────────┐   │  │
 │  │  │ EKS Cluster │  │ RDS (MySQL +    │  │ S3 + Lambda         │   │  │
-│  │  │ project-    │  │ PostgreSQL)     │  │ bedrock-asset-       │   │  │
+│  │  │ project-    │  │ PostgreSQL)     │  │ barakat-2025-capstone-bedrock-asset- │   │  │
 │  │  │ bedrock-    │  │ External DB      │  │ processor + events   │   │  │
 │  │  │ cluster     │  │ (catalog, orders)│  │                      │   │  │
 │  │  │             │  └─────────────────┘  └──────────────────────┘   │  │
@@ -58,13 +58,13 @@ InnovateMart is a rapidly growing e-commerce startup focused on redefining the o
 
 | Component | Description |
 |-----------|-------------|
-| **EKS Cluster** | `project-bedrock-cluster` — Kubernetes 1.29+ |
+| **EKS Cluster** | `barakat-2025-capstone-bedrock-cluster` — Kubernetes 1.29+ |
 | **Application Namespace** | `retail-app` — Retail Store Sample App |
 | **RDS** | MySQL (catalog), PostgreSQL (orders) — used by all app services |
 | **ALB** | Application Load Balancer — Ingress for retail-store-ui |
-| **Lambda** | `bedrock-asset-processor` — S3-triggered, CloudWatch logging |
-| **S3** | `bedrock-assets-*` — Event notification to Lambda |
-| **IAM User** | `bedrock-dev-view` — EKS read + S3 upload |
+| **Lambda** | `barakat-2025-capstone-bedrock-asset-processor` — S3-triggered, CloudWatch logging |
+| **S3** | `barakat-2025-capstone-bedrock-assets-0347` — Event notification to Lambda |
+| **IAM User** | `barakat-2025-capstone-bedrock-dev-view` — EKS read + S3 upload |
 
 ---
 
@@ -88,7 +88,7 @@ bash scripts/deploy_full_stack.sh
 # or: make deploy-full
 
 # 3. Configure kubeconfig
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 
 # 4. Get application URL
 kubectl get ingress -n retail-app
@@ -115,11 +115,11 @@ The ALB is internet-facing and routes traffic to `retail-store-ui` (port 80) in 
 ### kubectl
 
 ```bash
-aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster
+aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster
 kubectl get pods -n retail-app
 ```
 
-### Developer IAM User (bedrock-dev-view)
+### Developer IAM User (barakat-2025-capstone-bedrock-dev-view)
 
 ```bash
 # Get credentials from Terraform output
@@ -127,8 +127,8 @@ terraform -chdir=infra/envs/dev output bedrock_dev_view_access_key_id
 terraform -chdir=infra/envs/dev output bedrock_dev_view_secret_access_key
 
 # Configure and verify
-aws configure --profile bedrock-dev-view  # Use the keys above
-aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --profile bedrock-dev-view
+aws configure --profile barakat-2025-capstone-bedrock-dev-view  # Use the keys above
+aws eks describe-cluster --name barakat-2025-capstone-bedrock-cluster --region us-east-1 --profile barakat-2025-capstone-bedrock-dev-view
 ```
 
 ---
@@ -139,22 +139,22 @@ aws eks describe-cluster --name project-bedrock-cluster --region us-east-1 --pro
 
 - **CloudWatch Observability addon** — collects container logs from `retail-app` namespace.
 - **Log groups:**
-  - `/aws/eks/project-bedrock-cluster/cluster` — Control plane
-  - `/aws/containerinsights/project-bedrock-cluster/application` — Application workloads
+  - `/aws/eks/barakat-2025-capstone-bedrock-cluster/cluster` — Control plane
+  - `/aws/containerinsights/barakat-2025-capstone-bedrock-cluster/application` — Application workloads
 
 ### Lambda Logs
 
-- Log group: `/aws/lambda/bedrock-asset-processor`
+- Log group: `/aws/lambda/barakat-2025-capstone-bedrock-asset-processor`
 - Retention: 14 days
 
 ### Viewing Logs
 
 ```bash
 # EKS control plane
-aws logs tail /aws/eks/project-bedrock-cluster/cluster --region us-east-1 --follow
+aws logs tail /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster --region us-east-1 --follow
 
 # Lambda
-aws logs tail /aws/lambda/bedrock-asset-processor --region us-east-1
+aws logs tail /aws/lambda/barakat-2025-capstone-bedrock-asset-processor --region us-east-1
 
 # Verification script
 bash scripts/verify_logs.sh
@@ -162,8 +162,8 @@ bash scripts/verify_logs.sh
 
 ### CloudWatch Console
 
-- **Logs:** CloudWatch → Log groups → filter by `/aws/eks/project-bedrock-cluster`
-- **Metrics:** Container Insights → select `project-bedrock-cluster`
+- **Logs:** CloudWatch → Log groups → filter by `/aws/eks/barakat-2025-capstone-bedrock-cluster`
+- **Metrics:** Container Insights → select `barakat-2025-capstone-bedrock-cluster`
 
 ---
 
@@ -211,7 +211,7 @@ Capstone-Project-Bedrock/
 ├── infra/
 │   ├── envs/dev|staging|prod/
 │   └── modules/          # VPC, EKS, persistence, serverless, app, alb_controller, observability
-├── lambda/hello/          # bedrock-asset-processor source
+├── lambda/hello/          # barakat-2025-capstone-bedrock-asset-processor source
 ├── scripts/               # deploy_full_stack, test_lambda, verify_*
 └── Makefile
 ```

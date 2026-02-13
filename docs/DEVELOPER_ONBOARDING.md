@@ -4,7 +4,7 @@
 
 - AWS CLI v2
 - kubectl
-- Access to `bedrock-dev-view` credentials (from `terraform output`)
+- Access to `barakat-2025-capstone-bedrock-dev-view` credentials (from `terraform output`)
 
 ---
 
@@ -32,7 +32,7 @@ aws configure --profile bedrock-dev
 ```bash
 aws eks update-kubeconfig \
   --region us-east-1 \
-  --name project-bedrock-cluster \
+  --name barakat-2025-capstone-bedrock-cluster \
   --profile bedrock-dev
 ```
 

@@ -17,7 +17,7 @@ variable "lambda_zip_path" {
 }
 
 variable "vpc_id" {
-  description = "VPC ID for tagging and association (project-bedrock-vpc)"
+  description = "VPC ID for tagging and association (barakat-2025-capstone-bedrock-vpc)"
   type        = string
   default     = null
 }

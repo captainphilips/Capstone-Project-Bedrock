@@ -20,7 +20,7 @@ resource "aws_eks_cluster" "bedrock" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 
@@ -38,7 +38,7 @@ data "aws_eks_cluster_auth" "bedrock" {
 
 resource "aws_eks_node_group" "bedrock" {
   cluster_name    = aws_eks_cluster.bedrock.name
-  node_group_name = "project-bedrock-nodes"
+  node_group_name = "barakat-2025-capstone-nodes"
   node_role_arn   = aws_iam_role.eks_nodes.arn
   subnet_ids      = local.effective_subnet_ids
   instance_types  = ["t3.large"]
@@ -52,7 +52,7 @@ resource "aws_eks_node_group" "bedrock" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 
@@ -71,7 +71,7 @@ resource "aws_eks_addon" "coredns" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -85,7 +85,7 @@ resource "aws_eks_addon" "kube_proxy" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -99,7 +99,7 @@ resource "aws_eks_addon" "vpc_cni" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -114,7 +114,7 @@ resource "aws_eks_addon" "ebs_csi" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }

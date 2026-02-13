@@ -35,5 +35,5 @@ Helper scripts for deployment, verification, and operations.
 | `verify_logs.sh` | Verify CloudWatch log groups and streams |
 | `verify_metrics.sh` | Verify Container Insights and metrics |
 | `verify_resilience.sh` | Check nodes, AZs, pod distribution |
-| `test_dev_access.sh` | Test bedrock-dev-view access |
+| `test_dev_access.sh` | Test barakat-2025-capstone-bedrock-dev-view access |
 | `helm_setup.sh` | Manual Helm chart setup (fallback) |

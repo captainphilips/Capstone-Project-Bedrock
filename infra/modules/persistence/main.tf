@@ -16,19 +16,19 @@ data "aws_vpc" "selected" {
 }
 
 resource "aws_db_subnet_group" "this" {
-  name       = "project-bedrock-db-subnets"
+  name       = "barakat-2025-capstone-db-subnets"
   subnet_ids = var.private_subnet_ids
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 resource "aws_security_group" "db" {
-  name        = "project-bedrock-db-sg"
+  name        = "barakat-2025-capstone-db-sg"
   description = "Allow database access from within the VPC"
   vpc_id      = var.vpc_id
 
@@ -56,7 +56,7 @@ resource "aws_security_group" "db" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -72,7 +72,7 @@ resource "random_password" "orders" {
 }
 
 resource "aws_db_instance" "catalog" {
-  identifier              = "project-bedrock-catalog"
+  identifier              = "barakat-2025-capstone-catalog"
   engine                  = "mysql"
   instance_class          = var.mysql_instance_class
   allocated_storage       = 20
@@ -92,13 +92,13 @@ resource "aws_db_instance" "catalog" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 resource "aws_db_instance" "orders" {
-  identifier              = "project-bedrock-orders"
+  identifier              = "barakat-2025-capstone-orders"
   engine                  = "postgres"
   instance_class          = var.postgres_instance_class
   allocated_storage       = 20
@@ -118,29 +118,29 @@ resource "aws_db_instance" "orders" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 resource "aws_secretsmanager_secret" "catalog" {
-  name = "project-bedrock/catalog-db"
+  name = "barakat-2025-capstone/catalog-db"
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 resource "aws_secretsmanager_secret" "orders" {
-  name = "project-bedrock/orders-db"
+  name = "barakat-2025-capstone/orders-db"
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }

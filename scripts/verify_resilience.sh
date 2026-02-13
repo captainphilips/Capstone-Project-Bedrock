@@ -10,7 +10,7 @@ echo ""
 
 echo "Nodes (expect 2+ across AZs):"
 kubectl get nodes -o wide 2>/dev/null || {
-  echo "  Run: aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster"
+  echo "  Run: aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster"
   exit 1
 }
 

@@ -16,24 +16,24 @@ resource "aws_iam_role" "eks_irsa_role" {
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
 
 data "aws_iam_user" "bedrock_dev_view" {
   count     = var.use_existing_bedrock_dev_view_user ? 1 : 0
-  user_name = "bedrock-dev-view"
+  user_name = "barakat-2025-capstone-bedrock-dev-view"
 }
 
 resource "aws_iam_user" "bedrock_dev_view" {
   count = var.use_existing_bedrock_dev_view_user ? 0 : 1
-  name  = "bedrock-dev-view"
+  name  = "barakat-2025-capstone-bedrock-dev-view"
 
   tags = merge(
     var.tags,
     {
-      Project = "Bedrock-Terraform"
+      Project = "barakat-2025-capstone"
     }
   )
 }
@@ -49,7 +49,7 @@ resource "aws_iam_user_policy_attachment" "bedrock_dev_view_ro" {
 }
 
 resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
-  name = "bedrock-dev-view-eks-describe"
+  name = "barakat-2025-capstone-bedrock-dev-view-eks-describe"
   user = local.bedrock_dev_view_user_name
 
   policy = jsonencode({
@@ -65,7 +65,7 @@ resource "aws_iam_user_policy" "bedrock_dev_view_eks_describe" {
 }
 
 resource "aws_iam_user_policy" "bedrock_dev_view_bucket_put" {
-  name = "bedrock-dev-view-bucket-put"
+  name = "barakat-2025-capstone-bedrock-dev-view-bucket-put"
   user = local.bedrock_dev_view_user_name
 
   policy = jsonencode({

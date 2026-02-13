@@ -78,7 +78,7 @@ terraform apply -input=false tfplan
 
 Write-Host "`n=== Deployment Complete ===" -ForegroundColor Green
 Write-Host "Next steps:" -ForegroundColor Cyan
-Write-Host "  1. aws eks update-kubeconfig --region us-east-1 --name project-bedrock-cluster"
+Write-Host "  1. aws eks update-kubeconfig --region us-east-1 --name barakat-2025-capstone-bedrock-cluster"
 Write-Host "  2. kubectl get ingress -n retail-app  (get the Retail Store URL)"
 Write-Host "  3. terraform output  (get grading credentials)"
 Write-Host ""

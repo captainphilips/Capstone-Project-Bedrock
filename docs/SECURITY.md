@@ -14,7 +14,7 @@
 | Control | Implementation |
 |---------|----------------|
 | **IRSA** | IAM Roles for Service Accounts (ALB controller, External Secrets, CloudWatch) |
-| **EKS Access** | IAM user `bedrock-dev-view` with View policy |
+| **EKS Access** | IAM user `barakat-2025-capstone-bedrock-dev-view` with View policy |
 | **Least privilege** | Developer has read + S3 PutObject on assets bucket only |
 
 ## Data Protection
@@ -29,7 +29,7 @@
 
 | Tag | Value |
 |-----|-------|
-| `Project` | Bedrock-Terraform |
+| `Project` | barakat-2025-capstone |
 | `Environment` | dev / staging / prod |
 | `ManagedBy` | Terraform |
 

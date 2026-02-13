@@ -15,21 +15,21 @@ Project Bedrock centralizes logs and metrics in **AWS CloudWatch**:
 ### 1. AWS Console
 
 1. Open [CloudWatch Logs](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#logsV2:log-groups)
-2. Filter by: `/aws/eks/project-bedrock-cluster`
+2. Filter by: `/aws/eks/barakat-2025-capstone-bedrock-cluster`
 3. Log groups:
-   - `/aws/eks/project-bedrock-cluster/cluster` — Control plane
-   - `/aws/containerinsights/project-bedrock-cluster/application` — App logs (after addon)
+   - `/aws/eks/barakat-2025-capstone-bedrock-cluster/cluster` — Control plane
+   - `/aws/containerinsights/barakat-2025-capstone-bedrock-cluster/application` — App logs (after addon)
 
 ### 2. AWS CLI
 
 ```bash
 # List log groups
 aws logs describe-log-groups \
-  --log-group-name-prefix /aws/eks/project-bedrock-cluster \
+  --log-group-name-prefix /aws/eks/barakat-2025-capstone-bedrock-cluster \
   --region us-east-1
 
 # Tail recent logs
-aws logs tail /aws/eks/project-bedrock-cluster/cluster \
+aws logs tail /aws/eks/barakat-2025-capstone-bedrock-cluster/cluster \
   --region us-east-1 \
   --follow
 ```
@@ -47,7 +47,7 @@ bash scripts/verify_logs.sh
 ### 1. Container Insights (Console)
 
 1. Open [CloudWatch → Container Insights](https://console.aws.amazon.com/cloudwatch/home?region=us-east-1#container-insights:infrastructure)
-2. Select cluster: `project-bedrock-cluster`
+2. Select cluster: `barakat-2025-capstone-bedrock-cluster`
 3. View: Performance monitoring, Logs, Metrics
 
 ### 2. Application Signals

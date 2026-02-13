@@ -20,8 +20,8 @@ try {
 
 # 2. Bootstrap S3 + DynamoDB
 Write-Host "`n[2/6] Bootstrap Terraform state backend..." -ForegroundColor Yellow
-$bucket = "project-bedrock-0347-tf-state"
-$table = "project-bedrock-tf-lock"
+$bucket = "barakat-2025-capstone-tf-state"
+$table = "barakat-2025-capstone-tf-lock"
 $region = "us-east-1"
 
 try {

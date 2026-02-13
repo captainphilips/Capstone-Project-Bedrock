@@ -3,8 +3,8 @@
 # Run once before first terraform apply. Idempotent.
 
 set -e
-BUCKET="project-bedrock-0347-tf-state"
-TABLE="project-bedrock-tf-lock"
+BUCKET="barakat-2025-capstone-tf-state"
+TABLE="barakat-2025-capstone-tf-lock"
 REGION="us-east-1"
 
 echo "Bootstrap Terraform state backend..."

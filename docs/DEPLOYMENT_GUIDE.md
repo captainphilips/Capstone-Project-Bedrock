@@ -405,16 +405,16 @@ Create the Terraform state backend and DynamoDB lock table **before** first `ter
 ```bash
 # S3 bucket for Terraform state
 aws s3api create-bucket \
-  --bucket project-bedrock-0347-tf-state \
+  --bucket barakat-2025-capstone-tf-state \
   --region us-east-1
 
 aws s3api put-bucket-versioning \
-  --bucket project-bedrock-0347-tf-state \
+  --bucket barakat-2025-capstone-tf-state \
   --versioning-configuration Status=Enabled
 
 # DynamoDB table for state locking
 aws dynamodb create-table \
-  --table-name project-bedrock-tf-lock \
+  --table-name barakat-2025-capstone-tf-lock \
   --attribute-definitions AttributeName=LockID,AttributeType=S \
   --key-schema AttributeName=LockID,KeyType=HASH \
   --billing-mode PAY_PER_REQUEST \

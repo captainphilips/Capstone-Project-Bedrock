@@ -33,6 +33,6 @@ make output-dev    # Export outputs to grading.json
 
 ## State Backend
 
-- **S3**: `project-bedrock-0347-tf-state`
-- **DynamoDB**: `project-bedrock-tf-lock`
+- **S3**: `barakat-2025-capstone-tf-state`
+- **DynamoDB**: `barakat-2025-capstone-tf-lock`
 - **Region**: us-east-1

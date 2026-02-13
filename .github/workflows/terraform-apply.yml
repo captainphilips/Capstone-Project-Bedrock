@@ -35,6 +35,9 @@ jobs:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: us-east-1
 
+      - name: Bootstrap Terraform state backend
+        run: bash scripts/bootstrap_terraform_state.sh
+
       - name: Package Lambda function
         run: |
           python3 scripts/package_lambda_handler.py

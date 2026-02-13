@@ -1,0 +1,52 @@
+{
+  "assets_bucket_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "barakat-2025-capstone-bedrock-assets-0347"
+  },
+  "bedrock_dev_view_access_key_id": {
+    "sensitive": true,
+    "type": "string",
+    "value": "AKIA_REPLACE_WITH_ACTUAL_FROM_TERRAFORM_OUTPUT"
+  },
+  "bedrock_dev_view_secret_access_key": {
+    "sensitive": true,
+    "type": "string",
+    "value": "REPLACE_WITH_ACTUAL_SECRET_FROM_TERRAFORM_OUTPUT"
+  },
+  "cluster_endpoint": {
+    "sensitive": false,
+    "type": "string",
+    "value": "https://XXXXXXXXXX.gr7.us-east-1.eks.amazonaws.com"
+  },
+  "cluster_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "barakat-2025-capstone-bedrock-cluster"
+  },
+  "nat_gateway_ips": {
+    "sensitive": false,
+    "type": ["tuple", ["string", "string"]],
+    "value": ["34.237.14.114", "54.81.149.0"]
+  },
+  "private_subnet_ids": {
+    "sensitive": false,
+    "type": ["tuple", ["string", "string"]],
+    "value": ["subnet-0a0b2f5863b10725e", "subnet-097045e420a61a131"]
+  },
+  "public_subnet_ids": {
+    "sensitive": false,
+    "type": ["tuple", ["string", "string"]],
+    "value": ["subnet-0435b767a0254fd2c", "subnet-029c074283bbb9572"]
+  },
+  "region": {
+    "sensitive": false,
+    "type": "string",
+    "value": "us-east-1"
+  },
+  "vpc_id": {
+    "sensitive": false,
+    "type": "string",
+    "value": "vpc-09acc37891f648456"
+  }
+}

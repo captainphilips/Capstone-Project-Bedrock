@@ -1,6 +1,11 @@
 ############################
 # Dev Environment - Root Module
 ############################
+# Orchestrates all modules for full stack deployment
+
+############################
+# Variables
+############################
 variable "aws_region" {
   description = "AWS region"
   type        = string
@@ -14,7 +19,7 @@ variable "environment" {
 }
 
 variable "cluster_version" {
-  description = "EKS Kubernetes version (use 1.29, 1.31, 1.32, 1.33, or 1.34)"
+  description = "EKS Kubernetes version"
   type        = string
   default     = "1.29"
 }
@@ -26,44 +31,44 @@ variable "use_existing_bedrock_dev_view_user" {
 }
 
 ############################
-# VPC Module
+# 1. VPC Module (no dependencies)
 ############################
 module "vpc" {
   source = "../../modules/vpc"
 
-  vpc_cidr    = "10.0.0.0/16"
+  vpc_cidr    = local.vpc_cidr
   cluster_tag = local.cluster_name
   tags        = local.tags
 }
 
 ############################
-# EKS Module
+# 2. EKS Module (depends on VPC)
 ############################
 module "eks" {
   source = "../../modules/eks"
 
-  cluster_name    = local.cluster_name
-  cluster_version = var.cluster_version
-  vpc_id          = module.vpc.vpc_id
-  subnet_ids      = module.vpc.private_subnets
-  tags            = local.tags
+  cluster_name       = local.cluster_name
+  cluster_version    = var.cluster_version
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids  = module.vpc.private_subnets
+  tags               = local.tags
 }
 
 ############################
-# Persistence Module
+# 3. Persistence Module (depends on VPC)
 ############################
 module "persistence" {
   source = "../../modules/persistence"
 
   environment        = local.environment
   vpc_id             = module.vpc.vpc_id
-  vpc_cidr           = "10.0.0.0/16"
-  private_subnet_ids = module.vpc.private_subnets
+  vpc_cidr           = local.vpc_cidr
+  private_subnet_ids  = module.vpc.private_subnets
   tags               = local.tags
 }
 
 ############################
-# Observability Module
+# 4. Observability Module (depends on EKS)
 ############################
 module "observability" {
   source = "../../modules/observability"
@@ -76,7 +81,7 @@ module "observability" {
 }
 
 ############################
-# RBAC Module
+# 5. RBAC Module (depends on EKS)
 ############################
 module "rbac" {
   source = "../../modules/rbac"
@@ -84,12 +89,12 @@ module "rbac" {
   cluster_name                       = module.eks.cluster_name
   oidc_provider                      = module.eks.oidc_provider
   assets_bucket_name                 = local.assets_bucket
-  use_existing_bedrock_dev_view_user = var.use_existing_bedrock_dev_view_user
+  use_existing_bedrock_dev_view_user  = var.use_existing_bedrock_dev_view_user
   tags                               = local.tags
 }
 
 ############################
-# Serverless Module (Lambda bedrock-asset-processor + S3 bucket, synced with VPC)
+# 6. Serverless Module (depends on VPC)
 ############################
 module "serverless" {
   source = "../../modules/serverless"
@@ -102,7 +107,31 @@ module "serverless" {
 }
 
 ############################
-# External Secrets Module (depends on app for retail-app namespace)
+# 7. App Module (depends on EKS, Persistence)
+############################
+module "app" {
+  source = "../../modules/app"
+
+  providers = {
+    kubernetes = kubernetes
+    helm       = helm
+  }
+
+  cluster_name        = module.eks.cluster_name
+  namespace           = local.namespace
+  catalog_db_endpoint  = module.persistence.mysql_endpoint
+  catalog_db_port      = module.persistence.mysql_port
+  catalog_db_username  = module.persistence.catalog_db_username
+  catalog_db_password  = module.persistence.catalog_db_password
+  orders_db_endpoint   = module.persistence.postgres_endpoint
+  orders_db_port       = module.persistence.postgres_port
+  orders_db_name       = module.persistence.orders_db_name
+  orders_db_username   = module.persistence.orders_db_username
+  orders_db_password   = module.persistence.orders_db_password
+}
+
+############################
+# 8. External Secrets Module (depends on App)
 ############################
 module "external_secrets" {
   source = "../../modules/external_secrets"
@@ -124,7 +153,7 @@ module "external_secrets" {
 }
 
 ############################
-# ALB Controller Module (depends on app for retail-app namespace & retail-store-ui service)
+# 9. ALB Controller Module (depends on App)
 ############################
 module "alb_controller" {
   source = "../../modules/alb_controller"
@@ -142,30 +171,6 @@ module "alb_controller" {
   namespace         = local.namespace
 
   depends_on = [module.app]
-}
-
-############################
-# App Module (creates retail-app namespace via Helm)
-############################
-module "app" {
-  source = "../../modules/app"
-
-  providers = {
-    kubernetes = kubernetes
-    helm       = helm
-  }
-
-  cluster_name        = module.eks.cluster_name
-  namespace           = local.namespace
-  catalog_db_endpoint = module.persistence.mysql_endpoint
-  catalog_db_port     = module.persistence.mysql_port
-  catalog_db_username = module.persistence.catalog_db_username
-  catalog_db_password = module.persistence.catalog_db_password
-  orders_db_endpoint  = module.persistence.postgres_endpoint
-  orders_db_port      = module.persistence.postgres_port
-  orders_db_name      = module.persistence.orders_db_name
-  orders_db_username  = module.persistence.orders_db_username
-  orders_db_password  = module.persistence.orders_db_password
 }
 
 ############################
